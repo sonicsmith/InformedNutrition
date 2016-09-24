@@ -4,6 +4,19 @@ const app = electron.app
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow
 //
+var loki = require('lokijs');
+var db = new loki();
+var clients = db.addCollection('clients', {
+  indices: ['name']
+});
+
+clients.insert({ name: 'joe', email: 'joe@gmail.com'});
+clients.insert({ name: 'jack', email: 'jack@gmail.com'});
+clients.insert({ name: 'jim', email: 'jim@gmail.com'});
+
+db.saveDatabase();
+
+global.database = db;
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
