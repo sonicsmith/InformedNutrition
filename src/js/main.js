@@ -5,18 +5,26 @@ const app = electron.app
 const BrowserWindow = electron.BrowserWindow
 //
 var loki = require('lokijs');
-var db = new loki();
-var clients = db.addCollection('clients', {
-  indices: ['name']
+var database = new loki('app', {
+    autoload: true,
+    autoloadCallback : onDatabaseLoad
 });
 
-clients.insert({ name: 'joe', email: 'joe@gmail.com'});
-clients.insert({ name: 'jack', email: 'jack@gmail.com'});
-clients.insert({ name: 'jim', email: 'jim@gmail.com'});
+function onDatabaseLoad() {
+  if (database.getCollection('clients') == null) {
+    console.log("Creating Database");
+    var clients = database.addCollection('clients', {
+      indices: ['name']
+    });
 
-db.saveDatabase();
+    clients.insert({ name: 'joe', email: 'joe@gmail.com'});
+    clients.insert({ name: 'jack', email: 'jack@gmail.com'});
+    clients.insert({ name: 'jim', email: 'jim@gmail.com'});
 
-global.database = db;
+    database.saveDatabase();
+  }
+}
+//global.database = database;
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -24,7 +32,7 @@ let mainWindow
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 800, height: 600})
+  mainWindow = new BrowserWindow({width: 1000, height: 800})
 
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/../html/index.html`)

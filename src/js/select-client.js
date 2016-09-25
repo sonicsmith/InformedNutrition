@@ -3,8 +3,15 @@
 // All of the Node.js APIs are available in this process.
 
 const electron = require('electron');
-var remote = require('electron').remote;
+const remote = require('electron').remote;
+const ipcRenderer = require('electron').ipcRenderer;
 const currentWindow = electron.remote.getCurrentWindow()
+
+var loki = require('lokijs');
+var database = new loki('app', {
+    autoload: true,
+    autoloadCallback : onDatabaseLoad
+});
 
 var buttons = document.querySelectorAll('.action-buttons');
 
@@ -22,4 +29,9 @@ function prepareButton(button, action) {
     });
 }
 
-console.log(remote.getGlobal('database'));
+
+function onDatabaseLoad() {
+    var clientList = database.getCollection('clients').where(function(obj) {return true;});
+    ipcRenderer.send('clientList', clientList);
+}
+
