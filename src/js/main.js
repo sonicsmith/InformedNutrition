@@ -1,3 +1,6 @@
+
+require('electron-reload')(__dirname);
+
 const electron = require('electron')
 // Module to control application life.
 const app = electron.app
@@ -5,7 +8,7 @@ const app = electron.app
 const BrowserWindow = electron.BrowserWindow
 //
 var loki = require('lokijs');
-var database = new loki('app', {
+var database = new loki('app.db', {
     autoload: true,
     autoloadCallback : onDatabaseLoad
 });
