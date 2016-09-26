@@ -1,1 +1,0 @@
-console.error("Error: Cannot find module 'fsevents' from 'C:\\Users\\Nic\\Documents\\InformedNutrition\\Electron-App\\node_modules\\chokidar\\lib'");

@@ -1,19 +1,15 @@
 
-require('electron-reload')(__dirname);
+import app from 'app';
+import BrowserWindow from 'browser-window';
+import Loki from 'lokijs';
 
-const electron = require('electron')
-// Module to control application life.
-const app = electron.app
-// Module to create native browser window.
-const BrowserWindow = electron.BrowserWindow
-//
-var loki = require('lokijs');
-var database = new loki('app.db', {
+
+let database = new Loki('app.db', {
     autoload: true,
     autoloadCallback : onDatabaseLoad
 });
 
-function onDatabaseLoad() {
+const onDatabaseLoad = () => {
   if (database.getCollection('clients') == null) {
     console.log("Creating Database");
     var clients = database.addCollection('clients', {
@@ -27,18 +23,17 @@ function onDatabaseLoad() {
     database.saveDatabase();
   }
 }
-//global.database = database;
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 
-function createWindow () {
+const createWindow = () => {
   // Create the browser window.
   mainWindow = new BrowserWindow({width: 1000, height: 800})
 
   // and load the index.html of the app.
-  mainWindow.loadURL(`file://${__dirname}/../html/index.html`)
+  mainWindow.loadURL('file://' + __dirname + '/index.html');
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools()
@@ -58,7 +53,7 @@ function createWindow () {
 app.on('ready', createWindow)
 
 // Quit when all windows are closed.
-app.on('window-all-closed', function () {
+app.on('window-all-closed', () => {
   // On OS X it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== 'darwin') {
@@ -66,7 +61,7 @@ app.on('window-all-closed', function () {
   }
 })
 
-app.on('activate', function () {
+app.on('activate', () => {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) {

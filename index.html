@@ -3,6 +3,11 @@
   <head>
     <meta charset="UTF-8">
     <title>InformedNutrition</title>
+    <script>
+      // install babel hooks in the renderer process
+      require('babel-register');
+      require('./scripts/index');
+    </script>
   </head>
   <body>
     <h1>Home:</h1>
@@ -12,9 +17,4 @@
       <button class="nav-buttons" link="create-meal">Create New Meal</button>
     </div>
   </body>
-
-  <script>
-    // You can also require other files to run in this process
-    require('../js/index.js')
-  </script>
 </html>
