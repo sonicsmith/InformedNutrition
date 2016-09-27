@@ -2,6 +2,17 @@
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
 
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Index from '../views/index.jsx';
+
+window.onload = () => {
+  ReactDOM.render(<Index />, document.getElementById('nav-buttons'));
+}
+
+
+
 // import { remote } from 'electron';
 // const currentWindow = remote.getCurrentWindow();
 
