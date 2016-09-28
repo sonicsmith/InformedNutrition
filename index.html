@@ -6,15 +6,10 @@
     <script>
       // install babel hooks in the renderer process
       require('babel-register');
-      require('./scripts/index');
+      require('./scripts/MainView');
     </script>
   </head>
   <body>
-    <h1>Home:</h1>
-    <div id="nav-buttons">
-      <!--<button class="nav-buttons" link="create-client">Create New Client</button>
-      <button class="nav-buttons" link="select-client">Select Client</button>
-      <button class="nav-buttons" link="create-meal">Create New Meal</button>-->
-    </div>
+    <div id="content" />
   </body>
 </html>
