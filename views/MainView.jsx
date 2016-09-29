@@ -1,7 +1,6 @@
 'use babel';
 
 import React from 'react';
-import NavigationButton from './NavigationButton';
 // import CreateClient from './CreateClient';
 import SelectClient from './SelectClient';
 // import CreateMeal from './CreateMeal';
