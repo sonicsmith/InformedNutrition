@@ -17,13 +17,25 @@ const IndexPage = () => {
 }
 
 
-const View = ({currentView}) => {
-  // Index Page
-  // if (currentView == 'SelectClient') {
-  //   return (<SelectClient/>);
-  // }
-  // return (<IndexPage/>);
-  return (<h2>{currentView}</h2>);
+
+class View extends React.Component {
+
+  constructor(props) {
+    super();
+    this.state = {
+      currentView: props.currentView
+    };
+  }
+
+  componentWillReceiveProps(props) {
+    this.setState({currentView: props.currentView});
+  }
+
+  render() {
+    if (this.state.currentView == 'SelectClient') return <div><SelectClient/></div>
+    return <div>test first</div>
+  }
+
 }
 
 
@@ -36,15 +48,19 @@ export default class MainView extends React.Component {
     };
   }
 
-  handleClick(action) {
-    console.log("Click: "+action);
-
+  handleClick(view) {
+    console.log("Click: "+view);
+    this.setState({currentView: view});
   }
 
   render() {
     return <div>
       <h1>Informed Nutrition</h1>
-      <button onClick={this.handleClick.bind(this, "SelectClient")} action="SelectClient">Select Client</button>
+      <div className="nav-buttons">
+        <button onClick={this.handleClick.bind(this, "SelectClient")} >Select Client</button>
+        <button onClick={this.handleClick.bind(this, "AddClient")} >Add Client</button>
+        <button onClick={this.handleClick.bind(this, "AddMeal")} >Add Meal</button>
+      </div>
       <View currentView={this.state.currentView}/>
     </div>;
   }
