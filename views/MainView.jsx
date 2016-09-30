@@ -32,7 +32,7 @@ class View extends React.Component {
 
   render() {
     if (this.state.currentView == 'SelectClient') return <div><SelectClient/></div>
-    return <div>test first</div>
+    return <div></div>
   }
 
 }
@@ -43,7 +43,7 @@ export default class MainView extends React.Component {
   constructor() {
     super();
     this.state = {
-      currentView: "IndexPage"
+      currentView: ""
     };
   }
 

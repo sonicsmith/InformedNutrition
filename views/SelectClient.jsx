@@ -10,7 +10,7 @@ export default class SelectClient extends React.Component {
   constructor() {
     super();
     this.state = {
-      client: "no one"
+      clientList: []
     };
 
     let self = this;
@@ -22,17 +22,31 @@ export default class SelectClient extends React.Component {
 
     database.loadDatabase({}, function() {
       let clientList = database.getCollection('clients').where(function(obj) {return true;});
-      console.log("databaseLoad1");
-      self.setState({client: clientList[0].name});
+      self.setState({clientList: clientList});
     });
     
     const onDatabaseLoad = () => {
-      console.log("databaseLoad1");
+      console.log("onDatabaseLoad");
     }
 
   }
 
+  handleClick(id) {
+    console.log(id)
+  }
+
   render() {
-    return <div>{this.state.client}</div>;
+    const list = this.state.clientList;
+    return <div>
+      <input type="text"/>
+      <ul>
+          {list.map((client) => {
+            let id = client.$loki;
+            return <li key={id}>
+              {client.name}<button onClick={this.handleClick.bind(this, id)}>Edit</button>
+            </li>;
+          })}
+      </ul>
+    </div>;
   }
 }
