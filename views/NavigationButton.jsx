@@ -12,15 +12,22 @@ export default class NavigationButton extends React.Component {
     super();
     this.state = {
       text: props.text,
-      link: props.link
+      link: props.link,
+      switchView: props.switchView
     };
     this.handleClick = this.handleClick.bind(this);
   }
 
   handleClick() {
-    console.log("Click: "+this.state.link);
+    console.log("NavigationButton - Click: "+this.state.link);
     // Change Global view
-    //this.state.currentView = this.state.link;
+    //this.setState({currentView: this.state.link});
+    this.state.switchView(this.state.link);
+  }
+
+  componentWillReceiveProps(props) {
+    console.log("NavigationButton.componentWillReceiveProps");
+    this.setState({currentView: props.currentView});
   }
 
   render() {

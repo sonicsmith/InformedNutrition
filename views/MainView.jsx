@@ -4,17 +4,7 @@ import React from 'react';
 // import CreateClient from './CreateClient';
 import SelectClient from './SelectClient';
 // import CreateMeal from './CreateMeal';
-
-
-const IndexPage = () => {
-  return (<div>
-    <h2>Home:</h2>
-    <NavigationButton text="Add Client" link="CreateClient" />
-    <NavigationButton text="Select Client" link="SelectClient"/>
-    <NavigationButton text="Add Meal" link="CreateMeal"/>
-  </div>);
-}
-
+import NavigationButton from './NavigationButton';
 
 
 class View extends React.Component {
@@ -27,12 +17,13 @@ class View extends React.Component {
   }
 
   componentWillReceiveProps(props) {
+    console.log("View.componentWillReceiveProps");
     this.setState({currentView: props.currentView});
   }
 
   render() {
-    if (this.state.currentView == 'SelectClient') return <div><SelectClient/></div>
-    return <div></div>
+    if (this.state.currentView == 'SelectClient') return <div><SelectClient/></div>;
+    return <div></div>;
   }
 
 }
@@ -45,22 +36,30 @@ export default class MainView extends React.Component {
     this.state = {
       currentView: ""
     };
+    this.switchView = this.switchView.bind(this);
   }
 
-  handleClick(view) {
-    console.log("Click: "+view);
+  switchView(view) {
+    console.log("MainView - switchView: "+view);
     this.setState({currentView: view});
+  }
+
+  componentWillReceiveProps(props) {
+    console.log("MainView.componentWillReceiveProps");
+    this.setState({currentView: props.currentView});
   }
 
   render() {
     return <div>
       <h1>Informed Nutrition</h1>
       <div className="nav-buttons">
-        <button onClick={this.handleClick.bind(this, "SelectClient")} >Select Client</button>
-        <button onClick={this.handleClick.bind(this, "AddClient")} >Add Client</button>
-        <button onClick={this.handleClick.bind(this, "AddMeal")} >Add Meal</button>
+        <NavigationButton text="Select Client" link="SelectClient" switchView={this.switchView}/>
+        <NavigationButton text="Add Client" link="AddClient" switchView={this.switchView}/>
+        <NavigationButton text="Add Meal" link="AddMeal" switchView={this.switchView}/>
       </div>
-      <View currentView={this.state.currentView}/>
+      <div>
+        <View currentView={this.state.currentView}/>
+      </div>
     </div>;
   }
 }

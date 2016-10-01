@@ -32,6 +32,7 @@ export default class SelectClient extends React.Component {
   }
 
   handleClick(id) {
+    // Open edit client view
     console.log(id)
   }
 
