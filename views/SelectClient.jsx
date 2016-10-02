@@ -7,10 +7,11 @@ import Loki from 'lokijs';
 
 export default class SelectClient extends React.Component {
 
-  constructor() {
+  constructor(props) {
     super();
     this.state = {
-      clientList: []
+      clientList: [],
+      switchView: props.switchView
     };
 
     let self = this;
@@ -31,15 +32,16 @@ export default class SelectClient extends React.Component {
 
   }
 
-  handleClick(id) {
+  handleClick(clientId) {
     // Open edit client view
-    console.log(id)
+    console.log(clientId)
+    this.state.switchView('EditClient', {clientId});
   }
 
   render() {
     const list = this.state.clientList;
     return <div>
-      <input type="text"/>
+      <input type="text" placeholder="Search"/>
       <ul>
           {list.map((client) => {
             let id = client.$loki;
