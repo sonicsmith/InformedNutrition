@@ -2,37 +2,23 @@
 'use babel';
 
 import React from 'react';
-import Loki from 'lokijs';
 
 
 export default class EditClient extends React.Component {
 
   constructor(props) {
     super();
-    this.state = {
-      data: props.data,
-      switchView: props.switchView,
-      client: {name: 'loading..'}
-    };
+    this.state = props.state;
+    this.client = {name: 'loading..'};
 
-    let self = this;
-
-    let database = new Loki('app.db', {
-      autoload: true,
-      autoloadCallback : onDatabaseLoad
+    let clients = database.getCollection('clients').where(function(obj) {
+      return obj.$loki == self.state.clientId;
     });
-
-    database.loadDatabase({}, function() {
-      const id = self.state.data.clientId;
-      let clients = database.getCollection('clients').where(function(obj) {return obj.$loki == id;});
-      self.setState({client: clients[0]});
-      console.log("Got client:"+self.state.client.name)
-    });
-    
-    const onDatabaseLoad = () => {
-      console.log("onDatabaseLoad");
-    }
-
+    // let days = database.getCollection('days').where(function(obj) {
+    //   return obj.clientId == self.state.clientId;
+    // });
+    //self.setState({client: clients[0]});
+    console.log("Got client:"+clients[0].name)
   }
 
   componentWillReceiveProps(props) {

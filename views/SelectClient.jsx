@@ -2,51 +2,42 @@
 'use babel';
 
 import React from 'react';
-import Loki from 'lokijs';
-
 
 export default class SelectClient extends React.Component {
 
   constructor(props) {
     super();
     this.state = {
-      clientList: [],
-      switchView: props.switchView
+      setParentState: props.state.setParentState,
+      clientList: [{name:"loading"}],
+      database: props.state.database
     };
+    this.handleClick = this.handleClick.bind(this);
+    this.handleSearchChange = this.handleSearchChange.bind(this);
 
-    let self = this;
-
-    let database = new Loki('app.db', {
-      autoload: true,
-      autoloadCallback : onDatabaseLoad
-    });
-
-    database.loadDatabase({}, function() {
-      let clientList = database.getCollection('clients').where(function(obj) {return true;});
-      self.setState({clientList: clientList});
-    });
-    
-    const onDatabaseLoad = () => {
-      console.log("onDatabaseLoad");
-    }
-
+    const clientCollection = this.state.database.getCollection('clients');
+    this.state.clientList = clientCollection.where(function(obj) {return true;});
+    console.log(this.state.clientList);
   }
 
   handleClick(clientId) {
     // Open edit client view
-    console.log(clientId)
-    this.state.switchView('EditClient', {clientId});
+    this.state.setParentState({currentView: 'EditClient', clientId: clientId});
+  }
+
+  handleSearchChange() {
+    //this.setState(this.state)
   }
 
   render() {
     const list = this.state.clientList;
     return <div>
-      <input type="text" placeholder="Search"/>
+      <input type="text" placeholder="Search" onChange={this.handleSearchChange}/>
       <ul>
           {list.map((client) => {
             let id = client.$loki;
             return <li key={id}>
-              {client.name}<button onClick={this.handleClick.bind(this, id)}>Edit</button>
+              {client.name}<button onClick={this.handleClick}>Edit</button>
             </li>;
           })}
       </ul>

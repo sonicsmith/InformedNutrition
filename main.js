@@ -1,28 +1,7 @@
 
 import app from 'app';
 import BrowserWindow from 'browser-window';
-import Loki from 'lokijs';
 
-
-let database = new Loki('app.db', {
-    autoload: true,
-    autoloadCallback : onDatabaseLoad
-});
-
-const onDatabaseLoad = () => {
-  if (database.getCollection('clients') == null) {
-    console.log("Creating Database");
-    var clients = database.addCollection('clients', {
-      indices: ['name']
-    });
-
-    clients.insert({ name: 'joe', email: 'joe@gmail.com'});
-    clients.insert({ name: 'jack', email: 'jack@gmail.com'});
-    clients.insert({ name: 'jim', email: 'jim@gmail.com'});
-
-    database.saveDatabase();
-  }
-}
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
