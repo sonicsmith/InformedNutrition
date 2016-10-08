@@ -8,29 +8,24 @@ export default class EditClient extends React.Component {
 
   constructor(props) {
     super();
-    this.state = props.state;
-    this.client = {name: 'loading..'};
-
-    let clients = database.getCollection('clients').where(function(obj) {
-      return obj.$loki == self.state.clientId;
+    this.state = {
+      database: props.state.database
+    }
+    const clientId = props.state.clientId;
+    console.log("clientId"+clientId);
+    const client = this.state.database.getCollection('clients').where((obj) => {
+      return obj.$loki == clientId;
     });
-    // let days = database.getCollection('days').where(function(obj) {
-    //   return obj.clientId == self.state.clientId;
-    // });
-    //self.setState({client: clients[0]});
-    console.log("Got client:"+clients[0].name)
+    let days = this.state.database.getCollection('days').where((obj) => {
+      return obj.clientId == clientId;
+    });
+    this.state.client = client[0];
   }
 
-  componentWillReceiveProps(props) {
-    console.log("EditClient.componentWillReceiveProps");
-    this.setState({data: props.data});
-  }
 
   render() {
-    // const client = this.state.data;
-    const clientName = this.state.client.name;
     return <div>
-      <h1>{clientName}</h1>
+      <h1>{this.state.client.name}</h1>
       <hr/>
       <button>Add Week</button>
     </div>;

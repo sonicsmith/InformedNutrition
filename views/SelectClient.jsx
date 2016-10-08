@@ -12,17 +12,15 @@ export default class SelectClient extends React.Component {
       clientList: [{name:"loading"}],
       database: props.state.database
     };
-    this.handleClick = this.handleClick.bind(this);
     this.handleSearchChange = this.handleSearchChange.bind(this);
 
     const clientCollection = this.state.database.getCollection('clients');
-    this.state.clientList = clientCollection.where(function(obj) {return true;});
-    console.log(this.state.clientList);
+    this.state.clientList = clientCollection.where((obj) => {return true;});
   }
 
-  handleClick(clientId) {
+  handleClick(id) {
     // Open edit client view
-    this.state.setParentState({currentView: 'EditClient', clientId: clientId});
+    this.state.setParentState({currentView: 'EditClient', clientId: id});
   }
 
   handleSearchChange() {
@@ -37,7 +35,7 @@ export default class SelectClient extends React.Component {
           {list.map((client) => {
             let id = client.$loki;
             return <li key={id}>
-              {client.name}<button onClick={this.handleClick}>Edit</button>
+              {client.name}<button onClick={this.handleClick.bind(this, id)}>Edit</button>
             </li>;
           })}
       </ul>
