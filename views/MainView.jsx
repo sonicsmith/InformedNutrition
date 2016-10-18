@@ -4,6 +4,7 @@ import React from 'react';
 import AddClient from './AddClient';
 import SelectClient from './SelectClient';
 import EditClient from './EditClient';
+import EditDay from './EditDay';
 // import CreateMeal from './CreateMeal';
 import NavigationButton from './NavigationButton';
 import Loki from 'lokijs';
@@ -56,6 +57,9 @@ class View extends React.Component {
     }
     if (this.state.currentView == 'AddClient') {
       return <div><AddClient state={this.state} /></div>;
+    }
+    if (this.state.currentView == 'EditDay') {
+      return <div><EditDay state={this.state} /></div>;
     }
     return <div></div>;
   }

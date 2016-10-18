@@ -9,20 +9,27 @@ export class Week extends React.Component {
   constructor(props) {
     super();
     this.state = {
-      weekNumber: props.weekNumber
+      weekNumber: props.weekNumber,
+      setParentState: props.setParentState
     }
   }
+
+  handleClick(weekDay) {
+    console.log("Weekday:"+weekDay);
+    console.log("WeekNumber:"+this.state.weekNumber);
+    this.state.setParentState({currentView: 'EditDay', dayNumber: weekDay, weekNumber: this.state.weekNumber});
+  }  
 
   render() {
     return <div>
       Week {this.state.weekNumber}:
-      <button>M</button>
-      <button>T</button>
-      <button>W</button>
-      <button>T</button>
-      <button>F</button>
-      <button>S</button>
-      <button>S</button>
+      <button onClick={this.handleClick.bind(this, 1)}>M</button>
+      <button onClick={this.handleClick.bind(this, 2)}>T</button>
+      <button onClick={this.handleClick.bind(this, 3)}>W</button>
+      <button onClick={this.handleClick.bind(this, 4)}>T</button>
+      <button onClick={this.handleClick.bind(this, 5)}>F</button>
+      <button onClick={this.handleClick.bind(this, 6)}>S</button>
+      <button onClick={this.handleClick.bind(this, 7)}>S</button>
     </div>;
   }
 
@@ -33,10 +40,11 @@ export default class EditClient extends React.Component {
   constructor(props) {
     super();
     this.state = {
-      database: props.state.database
+      database: props.state.database,
+      setParentState: props.state.setParentState
     }
     const clientId = props.state.clientId;
-    console.log("clientId"+clientId);
+    console.log("EditClient with clientId"+clientId);
     const client = this.state.database.getCollection('clients').where((obj) => {
       return obj.$loki == clientId;
     });
@@ -63,8 +71,8 @@ export default class EditClient extends React.Component {
   render() {
     var numWeeks = (Object.keys(this.state.days).length)/7;
     var weeks = [];
-    for (var i = 0; i < numWeeks; i++) {
-      weeks.push(<li key={i}><Week weekNumber={i}/></li>);
+    for (var i = 1; i < numWeeks + 1; i++) {
+      weeks.push(<li key={i}><Week weekNumber={i} setParentState={this.state.setParentState}/></li>);
     }
     return <div>
       <h1>{this.state.client.name}</h1>
