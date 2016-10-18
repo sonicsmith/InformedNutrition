@@ -33,7 +33,7 @@ export default class SelectClient extends React.Component {
       <input type="text" placeholder="Search" onChange={this.handleSearchChange}/>
       <ul>
           {list.map((client) => {
-            let id = client.$loki;
+            const id = client.$loki;
             return <li key={id}>
               {client.name}<button onClick={this.handleClick.bind(this, id)}>Edit</button>
             </li>;
