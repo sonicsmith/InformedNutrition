@@ -35,6 +35,7 @@ export class Week extends React.Component {
 
 }
 
+
 export default class EditClient extends React.Component {
 
   constructor(props) {
@@ -55,6 +56,7 @@ export default class EditClient extends React.Component {
     this.state.days = days;
   }
 
+  // Create a week
   handleClick() {
     const daysCollection = this.state.database.getCollection('days');
     const weekNumber = (Object.keys(this.state.days).length)/7 + 1;

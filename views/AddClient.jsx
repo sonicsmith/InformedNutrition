@@ -11,9 +11,10 @@ export default class AddClient extends React.Component {
   constructor(props) {
     super();
     this.state = {
+      setParentState: props.state.setParentState,
       name: "",
       email: "",
-      database: props.state.database 
+      database: props.state.database
     };
 
     this.handleNameChange = this.handleNameChange.bind(this);
@@ -34,6 +35,7 @@ export default class AddClient extends React.Component {
     clientCollection.insert({ name: this.state.name, email: this.state.email});
     this.state.database.saveDatabase();
     console.log("New Client Saved", this.state.name);
+    this.state.setParentState({currentView: 'SelectClient'});
   }
 
   render() {

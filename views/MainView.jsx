@@ -28,7 +28,14 @@ const onDatabaseLoad = () => {
   if (database.getCollection('days') == null) {
     console.log("Creating days collection");
     var days = database.addCollection('days', {
-      indices: ['week']
+      indices: ['clientId']
+    });
+    database.saveDatabase();
+  }
+  if (database.getCollection('meals') == null) {
+    console.log("Creating meals collection");
+    var meals = database.addCollection('meals', {
+      indices: ['clientId']
     });
     database.saveDatabase();
   }
