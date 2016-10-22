@@ -11,7 +11,7 @@ const getDayId = (weekDay, weekNumber) => {
     const weekDayMatch = obj.dayOfWeek == weekDay;
     const weekMatch = obj.week == weekNumber;
     const clientMatch = obj.clientId == clientId
-    return obj.$loki == clientId;
+    return weekDayMatch && weekMatch && clientMatch;
   });
   return day[0].$loki;
 }

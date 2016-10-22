@@ -91,7 +91,7 @@ export default class EditDay extends React.Component {
     dayId = props.state.dayId;
     database = props.state.database;
     clientId = props.state.clientId;
-    console.log("Edit day with clientId: "+clientId);
+    console.log("Edit dayId: " + dayId + " with clientId: " + clientId);
     // Get Client Name
     const client = database.getCollection('clients').where((obj) => {
       return obj.$loki == clientId;
