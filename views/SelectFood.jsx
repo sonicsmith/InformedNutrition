@@ -15,6 +15,7 @@ export default class SelectFood extends React.Component {
     this.state = {
       setParentState: props.state.setParentState,
       foodList: [{name:"loading"}],
+      quantity: 1
     };
     this.handleSearchChange = this.handleSearchChange.bind(this);
     dayId = props.state.dayId;
@@ -32,7 +33,7 @@ export default class SelectFood extends React.Component {
       dayId: dayId,
       mealNumber: mealNumber,
       food: id,
-      quantity: 1 // TODO
+      quantity: this.state.quantity
     });
     database.saveDatabase();
     this.state.setParentState({currentView: 'EditDay'});
@@ -42,6 +43,13 @@ export default class SelectFood extends React.Component {
     //this.setState(this.state)
   }
 
+
+  handleQuantityChange(event) {
+    const editType = event.target.name;
+    this.setState({quantity: event.target.value});
+  }
+
+
   render() {
     const list = this.state.foodList;
     return <div>
@@ -49,8 +57,10 @@ export default class SelectFood extends React.Component {
       <ul>
           {list.map((food) => {
             const id = food.$loki;
-            return <li key={id}>
-              {food.name}<button onClick={this.handleClick.bind(this, id)}>+</button>
+            return <li key={id}>      
+              <input type="text" name="name" placeholder="Quantity" onChange={this.handleQuantityChange.bind(this)}/>
+              {food.name}
+              <button onClick={this.handleClick.bind(this, id)}>+</button>
             </li>;
           })}
       </ul>

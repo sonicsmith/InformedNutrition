@@ -35,7 +35,7 @@ export default class SelectClient extends React.Component {
           {list.map((client) => {
             const id = client.$loki;
             return <li key={id}>
-              {client.name}<button onClick={this.handleClick.bind(this, id)}>Edit</button>
+              {client.name} <button onClick={this.handleClick.bind(this, id)}>Edit</button>
             </li>;
           })}
       </ul>

@@ -71,11 +71,12 @@ export class Meal extends React.Component {
           const id = food.$loki;
           const foodName = getFoodNameFromId(food.food);
           return <li key={id}>
-            {foodName}<button onClick={this.removeFood.bind(this, id)}>-</button>
+            {food.quantity} x {foodName} <button onClick={this.removeFood.bind(this, id)}>-</button>
           </li>;
         })}
       </ul>
       <button onClick={this.addFood.bind(this)}>Add Food</button>
+      <br/>
     </div>;
   }
 
