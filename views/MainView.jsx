@@ -5,6 +5,8 @@ import AddClient from './AddClient';
 import SelectClient from './SelectClient';
 import EditClient from './EditClient';
 import EditDay from './EditDay';
+import AddFood from './AddFood';
+import SelectFood from './SelectFood';
 // import CreateMeal from './CreateMeal';
 import NavigationButton from './NavigationButton';
 import Loki from 'lokijs';
@@ -39,6 +41,13 @@ const onDatabaseLoad = () => {
     });
     database.saveDatabase();
   }
+  if (database.getCollection('food') == null) {
+    console.log("Creating food collection");
+    var meals = database.addCollection('food', {
+      indices: ['name']
+    });
+    database.saveDatabase();
+  }
 }
 
 class View extends React.Component {
@@ -68,7 +77,13 @@ class View extends React.Component {
     if (this.state.currentView == 'EditDay') {
       return <div><EditDay state={this.state} /></div>;
     }
-    return <div></div>;
+    if (this.state.currentView == 'AddFood') {
+      return <div><AddFood state={this.state} /></div>;
+    }
+    if (this.state.currentView == 'SelectFood') {
+      return <div><SelectFood state={this.state} /></div>;
+    }
+    return <div><br/><br/>Select an option above</div>;
   }
 
 }
@@ -100,7 +115,7 @@ export default class MainView extends React.Component {
       <div className="nav-buttons">
         <NavigationButton text="Select Client" link="SelectClient" setParentState={this.setParentState}/>
         <NavigationButton text="Add Client" link="AddClient" setParentState={this.setParentState}/>
-        <NavigationButton text="Add Meal" link="AddMeal" setParentState={this.setParentState}/>
+        <NavigationButton text="Add Food" link="AddFood" setParentState={this.setParentState}/>
         <hr/>
       </div>
       <div>

@@ -3,6 +3,21 @@
 
 import React from 'react';
 
+let clientId;
+let clientName;
+let database;
+let dayId;
+let weekNumber;
+let dayNumber;
+
+
+const getFoodNameFromId = (id) => {
+  console.log("Food:"+id);
+  const foods = database.getCollection('food');
+  const food = foods.where((obj) => {return obj.$loki == id});
+  return food[0].name;
+}
+
 
 export class Meal extends React.Component {
 
@@ -29,20 +44,38 @@ export class Meal extends React.Component {
         this.state.mealName = "Dinner:";
         break;
     }
+    // Get all meals from this day for this mealType
+    const mealsFoodCollection = database.getCollection('meals');
+    this.state.thisMealsFood = mealsFoodCollection.where((obj) => {
+      const dayMatch = obj.dayId == dayId;
+      const mealMatch = obj.mealNumber == this.state.mealNumber;
+      return dayMatch && mealMatch;
+    });
 
   }
 
-  handleClick(mealType) {
-    // console.log("Weekday:"+weekDay);
-    // console.log("WeekNumber:"+this.state.weekNumber);
-    // const dayId = 0;
-    // this.state.setParentState({currentView: 'EditDay', dayId: dayId});
+  addFood() {
+    this.state.setParentState({currentView: 'SelectFood', mealNumber: this.state.mealNumber});
   }  
 
+  removeFood(id) {
+    //
+  }
+
   render() {
+    let thisMealsFood = this.state.thisMealsFood;
     return <div>
-      <b>{this.state.mealName}</b>
-      <button onClick={this.handleClick.bind(this, 0)}>Add Food</button>
+      <b>{this.state.mealName}</b><br/>
+      <ul>
+        {thisMealsFood.map((food) => {
+          const id = food.$loki;
+          const foodName = getFoodNameFromId(food.food);
+          return <li key={id}>
+            {foodName}<button onClick={this.removeFood.bind(this, id)}>-</button>
+          </li>;
+        })}
+      </ul>
+      <button onClick={this.addFood.bind(this)}>Add Food</button>
     </div>;
   }
 
@@ -53,24 +86,22 @@ export default class EditDay extends React.Component {
   constructor(props) {
     super();
     this.state = {
-      database: props.state.database,
-      weekNumber: props.state.weekNumber,
-      dayNumber: props.state.dayNumber,
       setParentState: props.state.setParentState
     }
-    const clientId = props.state.clientId;
-    console.log("Edit day with clientId"+clientId);
-    const client = this.state.database.getCollection('clients').where((obj) => {
+    dayId = props.state.dayId;
+    database = props.state.database;
+    clientId = props.state.clientId;
+    console.log("Edit day with clientId: "+clientId);
+    // Get Client Name
+    const client = database.getCollection('clients').where((obj) => {
       return obj.$loki == clientId;
     });
-    const meals = this.state.database.getCollection('meals').where((obj) => {
-      const clientMatch = obj.clientId == clientId;
-      const dayMatch = obj.dayNumber == dayNumber;
-      const weekMatch = obj.weekNumber == weekNumber;
-      return clientMatch && dayMatch && weekMatch;
+    clientName = client[0].name;
+    const day = database.getCollection('days').where((obj) => {
+      return obj.$loki == dayId;
     });
-    this.state.clientId = clientId
-    this.state.clientName = client[0].name;
+    dayNumber = day[0].dayOfWeek;
+    weekNumber = day[0].week;
   }
 
   handleClick(mealType) {
@@ -87,13 +118,13 @@ export default class EditDay extends React.Component {
   }
 
   render() {
-    var meals = [];
+    let meals = []; // Not to be confused with the database meals
     for (var i = 0; i < 5; i++) {
       meals.push(<li key={i}><Meal mealNumber={i} setParentState={this.state.setParentState}/></li>);
     }
     return <div>
-      <h1>{this.state.clientName}</h1>
-      <h3>Week:{this.state.weekNumber}, Day:{this.state.dayNumber}</h3>
+      <h1>{clientName}</h1>
+      <h3>Week:{weekNumber}, Day:{dayNumber}</h3>
       <hr/>
       <ul>
         {meals}

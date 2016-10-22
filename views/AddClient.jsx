@@ -3,7 +3,6 @@
 
 import React from 'react';
 import Loki from 'lokijs';
-var remote = require('remote');
 
 
 export default class AddClient extends React.Component {
@@ -17,17 +16,13 @@ export default class AddClient extends React.Component {
       database: props.state.database
     };
 
-    this.handleNameChange = this.handleNameChange.bind(this);
-    this.handleEmailChange = this.handleEmailChange.bind(this);
+    this.handleEditChange = this.handleEditChange.bind(this);
     this.saveClient = this.saveClient.bind(this);
   }
 
-  handleNameChange(event) {
-    this.setState({name: event.target.value});
-  }
-
-  handleEmailChange(event) {
-    this.setState({email: event.target.value});
+  handleEditChange(event) {
+    const editType = event.target.name;
+    this.setState({[editType]: event.target.value});
   }
 
   saveClient() {
@@ -40,9 +35,9 @@ export default class AddClient extends React.Component {
 
   render() {
     return <div>
-      <input key="name" type="text" name="name" placeholder="Name" onChange={this.handleNameChange}/>
+      <input type="text" name="name" placeholder="Name" onChange={this.handleEditChange}/>
       <br/>
-      <input key="email" type="text" name="email" placeholder="Email" onChange={this.handleEmailChange}/>
+      <input type="text" name="email" placeholder="Email" onChange={this.handleEditChange}/>
       <br/>
       <button onClick={this.saveClient}>Save</button>
     </div>;
