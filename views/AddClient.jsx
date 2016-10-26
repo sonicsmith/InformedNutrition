@@ -31,6 +31,7 @@ export default class AddClient extends React.Component {
     this.state.database.saveDatabase();
     console.log("New Client Saved", this.state.name);
     this.state.setParentState({currentView: 'SelectClient'});
+    alert("Client Saved.");
   }
 
   render() {

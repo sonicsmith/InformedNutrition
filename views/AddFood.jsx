@@ -37,6 +37,7 @@ export default class AddFood extends React.Component {
     database.saveDatabase();
     console.log("New Food Saved", this.state.name);
     this.state.setParentState({currentView: 'SelectClient'});
+    alert("Food Saved.");
   }
 
   render() {

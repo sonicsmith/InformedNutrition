@@ -2,6 +2,9 @@
 'use babel';
 
 import React from 'react';
+const fs = require('fs');
+
+
 
 let clientId;
 let clientName;
@@ -12,7 +15,6 @@ let dayNumber;
 
 
 const getFoodNameFromId = (id) => {
-  console.log("Food:"+id);
   const foods = database.getCollection('food');
   const food = foods.where((obj) => {return obj.$loki == id});
   return food[0].name;
@@ -105,27 +107,30 @@ export default class EditDay extends React.Component {
     weekNumber = day[0].week;
   }
 
-  handleClick(mealType) {
-    // const daysCollection = this.state.database.getCollection('days');
-    // const weekNumber = (Object.keys(this.state.days).length)/7 + 1;
-    // for (var index = 1; index < 8; index++) {
-    //   daysCollection.insert({ clientId: this.state.client.$loki, week: weekNumber, dayOfWeek: index});
-    // }
-    // this.state.database.saveDatabase();
-    // let days = daysCollection.where((obj) => {
-    //   return obj.clientId == this.state.client.$loki;
-    // });
-    // this.setState({days: days});
+  createPDF() {
+    console.log("createPDF clicked")
+    const remote = window.require('remote');
+    const currentWindow = remote.getCurrentWindow();
+    const contents = currentWindow.webContents;
+    contents.printToPDF({pageSize: 'A4', landscape: false}, (error, data) => {
+      if (error) throw error
+      const fileName = clientName + '-' + dayNumber + '-' + weekNumber + '.pdf';
+      fs.writeFile(__dirname + '/' + fileName, data, (error) => {
+        if (error) throw error
+        console.log('Write PDF successfully.')
+        alert("File Saved: " + fileName);
+      })
+    });
   }
 
   render() {
-    let meals = []; // Not to be confused with the database meals
-    for (var i = 0; i < 5; i++) {
+    let meals = []; // Not to be confused with the database 'meals''
+    for (let i = 0; i < 5; i++) {
       meals.push(<li key={i}><Meal mealNumber={i} setParentState={this.state.setParentState}/></li>);
     }
     return <div>
       <h1>{clientName}</h1>
-      <h3>Week:{weekNumber}, Day:{dayNumber}</h3>
+      <h3>Week:{weekNumber}, Day:{dayNumber}</h3><button onClick={this.createPDF}>CREATE PDF</button>
       <hr/>
       <ul>
         {meals}
@@ -133,3 +138,4 @@ export default class EditDay extends React.Component {
     </div>;
   }
 }
+

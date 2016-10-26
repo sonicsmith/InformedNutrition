@@ -1,10 +1,7 @@
 'use babel';
 
 import React from 'react';
-var remote = window.require('remote');
-const currentWindow = remote.getCurrentWindow();
 
-import MainView from './MainView';
 
 export default class NavigationButton extends React.Component {
 
@@ -23,10 +20,6 @@ export default class NavigationButton extends React.Component {
     this.state.setParentState({currentView: this.state.link});
   }
 
-  // componentWillReceiveProps(props) {
-  //   console.log("NavigationButton.componentWillReceiveProps");
-  //   this.setState({currentView: props.currentView});
-  // }
 
   render() {
     return <button onClick={this.handleClick}>{this.state.text}</button>;
