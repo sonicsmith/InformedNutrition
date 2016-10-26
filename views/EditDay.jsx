@@ -21,6 +21,12 @@ const getFoodNameFromId = (id) => {
 }
 
 
+const foodForMeal = (obj, mealNumber) => {
+  const dayMatch = obj.dayId == dayId;
+  const mealMatch = obj.mealNumber == mealNumber;
+  return dayMatch && mealMatch;
+}
+
 export class Meal extends React.Component {
 
   constructor(props) {
@@ -47,13 +53,9 @@ export class Meal extends React.Component {
         break;
     }
     // Get all meals from this day for this mealType
-    const mealsFoodCollection = database.getCollection('meals');
-    this.state.thisMealsFood = mealsFoodCollection.where((obj) => {
-      const dayMatch = obj.dayId == dayId;
-      const mealMatch = obj.mealNumber == this.state.mealNumber;
-      return dayMatch && mealMatch;
-    });
-
+    this.state.thisMealsFood = database.getCollection('meals').where(
+      (obj) => foodForMeal(obj, this.state.mealNumber)
+    );
   }
 
   addFood() {
@@ -61,11 +63,19 @@ export class Meal extends React.Component {
   }  
 
   removeFood(id) {
-    //
+    const mealsCollection = database.getCollection('meals');
+    const food = mealsCollection.find({'$loki': id } );
+    console.log(food[0]);
+    mealsCollection.remove(food[0]);
+    database.saveDatabase;
+    // Update React
+    this.setState({thisMealsFood: database.getCollection('meals').where(
+      (obj) => foodForMeal(obj, this.state.mealNumber)
+    )});
   }
 
   render() {
-    let thisMealsFood = this.state.thisMealsFood;
+    const thisMealsFood = this.state.thisMealsFood;
     return <div>
       <b>{this.state.mealName}</b><br/>
       <ul>
