@@ -90,6 +90,9 @@ export default class EditClient extends React.Component {
     }
     return <div>
       <h1>{this.state.client.name}</h1>
+      <b>Intolerances:</b> {this.state.client.intolerances}<br/>
+      <b>Likes and Dislikes:</b> {this.state.client.likesDislikes}<br/>
+      <b>Medications and Supplements:</b> {this.state.client.medications}<br/>
       <hr/>
       <ul>
         {weeks}

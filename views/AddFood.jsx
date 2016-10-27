@@ -13,8 +13,10 @@ export default class AddFood extends React.Component {
     this.state = {
       setParentState: props.state.setParentState,
       name: "",
-      protein: "",
-      fat: ""
+      calorie: 0,
+      carb: 0,
+      protein: 0,
+      fat: 0
     };
     database = props.state.database;
     this.handleEditChange = this.handleEditChange.bind(this);
@@ -30,7 +32,9 @@ export default class AddFood extends React.Component {
   saveFood() {
     const foodCollection = database.getCollection('food');
     foodCollection.insert({ 
-      name: this.state.name, 
+      name: this.state.name,
+      calorie: this.state.calorie,
+      carb: this.state.carb,
       protein: this.state.protein,
       fat: this.state.fat
     });
@@ -44,9 +48,13 @@ export default class AddFood extends React.Component {
     return <div>
       <input type="text" name="name" placeholder="Name and quantity" onChange={this.handleEditChange}/>
       <br/>
-      <input type="text" name="protein" placeholder="Protein content (g)" onChange={this.handleEditChange}/>
+      <input type="number" name="calorie" placeholder="Calorie content (g)" onChange={this.handleEditChange}/>
       <br/>
-      <input type="text" name="fat" placeholder="Fat content (g)" onChange={this.handleEditChange}/>
+      <input type="number" name="carb" placeholder="Carb content (g)" onChange={this.handleEditChange}/>
+      <br/>
+      <input type="number" name="protein" placeholder="Protein content (g)" onChange={this.handleEditChange}/>
+      <br/>
+      <input type="number" name="fat" placeholder="Fat content (g)" onChange={this.handleEditChange}/>
       <br/>
       <button onClick={this.saveFood}>Save</button>
     </div>;

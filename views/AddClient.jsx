@@ -12,7 +12,11 @@ export default class AddClient extends React.Component {
     this.state = {
       setParentState: props.state.setParentState,
       name: "",
+      cell: "",
       email: "",
+      intolerances: "",
+      likesDislikes: "",
+      medications: "",
       database: props.state.database
     };
 
@@ -27,7 +31,14 @@ export default class AddClient extends React.Component {
 
   saveClient() {
     const clientCollection = this.state.database.getCollection('clients');
-    clientCollection.insert({ name: this.state.name, email: this.state.email});
+    clientCollection.insert({ 
+      name: this.state.name,
+      cell: this.state.cell,
+      email: this.state.email,
+      intolerances: this.state.intolerances,
+      likesDislikes: this.state.likesDislikes,
+      medications: this.state.medications,
+    });
     this.state.database.saveDatabase();
     console.log("New Client Saved", this.state.name);
     this.state.setParentState({currentView: 'SelectClient'});
@@ -38,7 +49,15 @@ export default class AddClient extends React.Component {
     return <div>
       <input type="text" name="name" placeholder="Name" onChange={this.handleEditChange}/>
       <br/>
+      <input type="text" name="cell" placeholder="Cell" onChange={this.handleEditChange}/>
+      <br/>
       <input type="text" name="email" placeholder="Email" onChange={this.handleEditChange}/>
+      <br/>
+      <input type="text" name="intolerances" placeholder="Intolerances" onChange={this.handleEditChange}/>
+      <br/>
+      <input type="text" name="likesDislikes" placeholder="Likes and Dislikes" onChange={this.handleEditChange}/>
+      <br/>
+      <input type="text" name="medications" placeholder="Medications and Supplements" onChange={this.handleEditChange}/>
       <br/>
       <button onClick={this.saveClient}>Save</button>
     </div>;

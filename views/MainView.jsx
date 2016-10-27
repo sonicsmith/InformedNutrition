@@ -7,16 +7,17 @@ import EditClient from './EditClient';
 import EditDay from './EditDay';
 import AddFood from './AddFood';
 import SelectFood from './SelectFood';
-// import CreateMeal from './CreateMeal';
 import NavigationButton from './NavigationButton';
 import Loki from 'lokijs';
 
+const demoData = require('../scripts/demoData');
 
 let database = new Loki('app.db');
 
 database.loadDatabase({}, () => {
   onDatabaseLoad();
 });
+
 
 const onDatabaseLoad = () => {
   console.log('database loaded');
@@ -47,6 +48,8 @@ const onDatabaseLoad = () => {
       indices: ['name']
     });
     database.saveDatabase();
+    // Now add demoData
+    demoData.setDemoData(database);
   }
 }
 

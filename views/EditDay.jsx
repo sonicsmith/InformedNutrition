@@ -7,7 +7,6 @@ const fs = require('fs');
 
 
 let clientId;
-let clientName;
 let database;
 let dayId;
 let weekNumber;
@@ -109,7 +108,7 @@ export default class EditDay extends React.Component {
     const client = database.getCollection('clients').where((obj) => {
       return obj.$loki == clientId;
     });
-    clientName = client[0].name;
+    this.state.client = client[0];
     const day = database.getCollection('days').where((obj) => {
       return obj.$loki == dayId;
     });
@@ -124,7 +123,7 @@ export default class EditDay extends React.Component {
     const contents = currentWindow.webContents;
     contents.printToPDF({pageSize: 'A4', landscape: false}, (error, data) => {
       if (error) throw error
-      const fileName = clientName + '-' + dayNumber + '-' + weekNumber + '.pdf';
+      const fileName = this.state.client + '-' + dayNumber + '-' + weekNumber + '.pdf';
       fs.writeFile(__dirname + '/' + fileName, data, (error) => {
         if (error) throw error
         console.log('Write PDF successfully.')
@@ -139,7 +138,10 @@ export default class EditDay extends React.Component {
       meals.push(<li key={i}><Meal mealNumber={i} setParentState={this.state.setParentState}/></li>);
     }
     return <div>
-      <h1>{clientName}</h1>
+      <h1>{this.state.client.name}</h1>
+      <b>Intolerances:</b> {this.state.client.intolerances}<br/>
+      <b>Likes and Dislikes:</b> {this.state.client.likesDislikes}<br/>
+      <b>Medications and Supplements:</b> {this.state.client.medications}<br/>
       <h3>Week:{weekNumber}, Day:{dayNumber}</h3><button onClick={this.createPDF}>CREATE PDF</button>
       <hr/>
       <ul>
