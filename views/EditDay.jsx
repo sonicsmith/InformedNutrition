@@ -13,18 +13,18 @@ let weekNumber;
 let dayNumber;
 
 
-const getFoodNameFromId = (id) => {
+const getFoodFromId = (id) => {
   const foods = database.getCollection('food');
   const food = foods.where((obj) => {return obj.$loki == id});
-  return food[0].name;
+  return food[0];
 }
-
 
 const foodForMeal = (obj, mealNumber) => {
   const dayMatch = obj.dayId == dayId;
   const mealMatch = obj.mealNumber == mealNumber;
   return dayMatch && mealMatch;
 }
+
 
 export class Meal extends React.Component {
 
@@ -80,7 +80,7 @@ export class Meal extends React.Component {
       <ul>
         {thisMealsFood.map((food) => {
           const id = food.$loki;
-          const foodName = getFoodNameFromId(food.food);
+          const foodName = getFoodFromId(food.food).name;
           return <li key={id}>
             {food.quantity} x {foodName} <button onClick={this.removeFood.bind(this, id)}>-</button>
           </li>;
@@ -98,7 +98,11 @@ export default class EditDay extends React.Component {
   constructor(props) {
     super();
     this.state = {
-      setParentState: props.state.setParentState
+      setParentState: props.state.setParentState,
+      totalCalorie: 0,
+      totalCarb: 0,
+      totalProtein: 0,
+      totalFat: 0
     }
     dayId = props.state.dayId;
     database = props.state.database;
@@ -114,6 +118,18 @@ export default class EditDay extends React.Component {
     });
     dayNumber = day[0].dayOfWeek;
     weekNumber = day[0].week;
+    //
+    const totalFood = database.getCollection('meals').where((obj) => {
+      return obj.dayId == dayId;
+    });
+    for (var i = 0; i < totalFood.length; i++) {
+      const food = getFoodFromId(totalFood[i].food);
+      this.state.totalCalorie += + food.calorie;
+      this.state.totalCarb += food.carb;
+      this.state.totalProtein += food.protein;
+      this.state.totalFat += food.fat;
+    }
+    console.log(this.state.totalCalorie)
   }
 
   createPDF() {
@@ -142,7 +158,11 @@ export default class EditDay extends React.Component {
       <b>Intolerances:</b> {this.state.client.intolerances}<br/>
       <b>Likes and Dislikes:</b> {this.state.client.likesDislikes}<br/>
       <b>Medications and Supplements:</b> {this.state.client.medications}<br/>
-      <h3>Week:{weekNumber}, Day:{dayNumber}</h3><button onClick={this.createPDF}>CREATE PDF</button>
+      <h3>Week:{weekNumber}, Day:{dayNumber}</h3>
+      <b>Nutrition Totals:</b><br/>
+      Calorie: {this.state.totalCalorie}, Carb: {this.state.totalCarb}, 
+      Protein: {this.state.totalProtein}, Fat: {this.state.totalFat}<br/>
+      <button onClick={this.createPDF}>CREATE PDF</button>
       <hr/>
       <ul>
         {meals}
