@@ -59,7 +59,7 @@ export default class SelectFood extends React.Component {
             const id = food.$loki;
             const quantityFoodName = food.name + 'quantity';
             return <li key={id}>      
-              <input type="text" name={quantityFoodName} onChange={this.handleQuantityChange.bind(this)}/>
+              <input type="number" name={quantityFoodName} onChange={this.handleQuantityChange.bind(this)}/>
               {food.name}
               <button onClick={this.handleClick.bind(this, id)}>+</button>
             </li>;

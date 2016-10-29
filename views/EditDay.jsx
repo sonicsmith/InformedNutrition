@@ -62,16 +62,30 @@ export class Meal extends React.Component {
     this.state.setParentState({currentView: 'SelectFood', mealNumber: this.state.mealNumber});
   }  
 
-  removeFood(id) {
-    const mealsCollection = database.getCollection('meals');
-    const food = mealsCollection.find({'$loki': id } );
-    mealsCollection.remove(food[0]);
-    database.saveDatabase();
+  updateReactMeals() {
     // Update React
     this.setState({thisMealsFood: database.getCollection('meals').where(
       (obj) => foodForMeal(obj, this.state.mealNumber)
     )});
     this.state.countNutrients(false);
+  }
+
+  removeFood(id) {
+    const mealsCollection = database.getCollection('meals');
+    const food = mealsCollection.find({'$loki': id});
+    mealsCollection.remove(food[0]);
+    database.saveDatabase();
+    this.updateReactMeals();
+  }
+
+  handleQuantityChange(id, event) {
+    console.log("Chnages")
+    const mealsCollection = database.getCollection('meals');
+    const food = mealsCollection.find({'$loki': id});
+    food[0].quantity = event.target.value;
+    mealsCollection.update(food[0]);
+    database.saveDatabase();
+    this.updateReactMeals();
   }
 
   render() {
@@ -83,7 +97,8 @@ export class Meal extends React.Component {
           const id = food.$loki;
           const foodName = getFoodFromId(food.food).name;
           return <li key={id}>
-            {food.quantity} x {foodName} <button onClick={this.removeFood.bind(this, id)}>-</button>
+            <input type="number" value={food.quantity} onChange={this.handleQuantityChange.bind(this, id)}/>
+             x {foodName} <button onClick={this.removeFood.bind(this, id)}>-</button>
           </li>;
         })}
       </ul>
@@ -133,10 +148,11 @@ export default class EditDay extends React.Component {
     let totalNutrients = {calorie: 0, carb: 0, protein: 0, fat: 0};
     for (let i = 0; i < totalFood.length; i++) {
       const food = getFoodFromId(totalFood[i].food);
-      totalNutrients.calorie += food.calorie;
-      totalNutrients.carb += food.carb;
-      totalNutrients.protein += food.protein;
-      totalNutrients.fat += food.fat;
+      const quantity = totalFood[i].quantity;
+      totalNutrients.calorie += food.calorie * quantity;
+      totalNutrients.carb += food.carb * quantity;
+      totalNutrients.protein += food.protein * quantity;
+      totalNutrients.fat += food.fat * quantity;
     }
     if (forConstructor) {
       this.state.totalNutrients = totalNutrients;
