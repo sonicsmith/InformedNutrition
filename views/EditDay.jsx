@@ -32,7 +32,8 @@ export class Meal extends React.Component {
     super();
     this.state = {
       mealNumber: props.mealNumber,
-      setParentState: props.setParentState
+      setParentState: props.setParentState,
+      countNutrients: props.countNutrients
     }
     switch(this.state.mealNumber) {
       case 0:
@@ -64,13 +65,13 @@ export class Meal extends React.Component {
   removeFood(id) {
     const mealsCollection = database.getCollection('meals');
     const food = mealsCollection.find({'$loki': id } );
-    console.log(food[0]);
     mealsCollection.remove(food[0]);
-    database.saveDatabase;
+    database.saveDatabase();
     // Update React
     this.setState({thisMealsFood: database.getCollection('meals').where(
       (obj) => foodForMeal(obj, this.state.mealNumber)
     )});
+    this.state.countNutrients(false);
   }
 
   render() {
@@ -99,10 +100,12 @@ export default class EditDay extends React.Component {
     super();
     this.state = {
       setParentState: props.state.setParentState,
-      totalCalorie: 0,
-      totalCarb: 0,
-      totalProtein: 0,
-      totalFat: 0
+      totalNutrients: {
+        calorie: 0,
+        carb: 0,
+        protein: 0,
+        fat: 0
+      }
     }
     dayId = props.state.dayId;
     database = props.state.database;
@@ -118,18 +121,28 @@ export default class EditDay extends React.Component {
     });
     dayNumber = day[0].dayOfWeek;
     weekNumber = day[0].week;
-    //
+    // Total up nutrients for day
+    this.countNutrients(true);
+  }
+
+  // Does same as in constructor, but triggers react
+  countNutrients(forConstructor) {
     const totalFood = database.getCollection('meals').where((obj) => {
       return obj.dayId == dayId;
     });
-    for (var i = 0; i < totalFood.length; i++) {
+    let totalNutrients = {calorie: 0, carb: 0, protein: 0, fat: 0};
+    for (let i = 0; i < totalFood.length; i++) {
       const food = getFoodFromId(totalFood[i].food);
-      this.state.totalCalorie += + food.calorie;
-      this.state.totalCarb += food.carb;
-      this.state.totalProtein += food.protein;
-      this.state.totalFat += food.fat;
+      totalNutrients.calorie += food.calorie;
+      totalNutrients.carb += food.carb;
+      totalNutrients.protein += food.protein;
+      totalNutrients.fat += food.fat;
     }
-    console.log(this.state.totalCalorie)
+    if (forConstructor) {
+      this.state.totalNutrients = totalNutrients;
+    } else {
+      this.setState({totalNutrients: totalNutrients});
+    }
   }
 
   createPDF() {
@@ -151,7 +164,7 @@ export default class EditDay extends React.Component {
   render() {
     let meals = []; // Not to be confused with the database 'meals''
     for (let i = 0; i < 5; i++) {
-      meals.push(<li key={i}><Meal mealNumber={i} setParentState={this.state.setParentState}/></li>);
+      meals.push(<li key={i}><Meal mealNumber={i} setParentState={this.state.setParentState} countNutrients={this.countNutrients.bind(this)}/></li>);
     }
     return <div>
       <h1>{this.state.client.name}</h1>
@@ -159,9 +172,10 @@ export default class EditDay extends React.Component {
       <b>Likes and Dislikes:</b> {this.state.client.likesDislikes}<br/>
       <b>Medications and Supplements:</b> {this.state.client.medications}<br/>
       <h3>Week:{weekNumber}, Day:{dayNumber}</h3>
-      <b>Nutrition Totals:</b><br/>
-      Calorie: {this.state.totalCalorie}, Carb: {this.state.totalCarb}, 
-      Protein: {this.state.totalProtein}, Fat: {this.state.totalFat}<br/>
+      <b>Nutrition Totals: </b>
+      Calorie: {this.state.totalNutrients.calorie}, Carb: {this.state.totalNutrients.carb}, 
+      Protein: {this.state.totalNutrients.protein}, Fat: {this.state.totalNutrients.fat}<br/>
+      <br/>
       <button onClick={this.createPDF}>CREATE PDF</button>
       <hr/>
       <ul>
