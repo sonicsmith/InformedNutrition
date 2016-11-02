@@ -29,7 +29,7 @@ export function setDemoData(database) {
       medications: "",
     });
     // Add some foods
-    const foodCollection = database.getCollection('food');
+    const foodCollection = database.getCollection('foodBank');
     foodCollection.insert({ 
       name: "egg",
       calorie: 70,

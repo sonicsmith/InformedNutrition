@@ -19,8 +19,6 @@ export default class AddFood extends React.Component {
       fat: 0
     };
     database = props.state.database;
-    this.handleEditChange = this.handleEditChange.bind(this);
-    this.saveFood = this.saveFood.bind(this);
   }
 
   handleEditChange(event) {
@@ -30,7 +28,7 @@ export default class AddFood extends React.Component {
 
 
   saveFood() {
-    const foodCollection = database.getCollection('food');
+    const foodCollection = database.getCollection('foodBank');
     foodCollection.insert({ 
       name: this.state.name,
       calorie: this.state.calorie,
@@ -46,17 +44,17 @@ export default class AddFood extends React.Component {
 
   render() {
     return <div>
-      <input type="text" name="name" placeholder="Name and quantity" onChange={this.handleEditChange}/>
+      <input type="text" name="name" placeholder="Name and quantity" onChange={this.handleEditChange.bind(this)}/>
       <br/>
-      <input type="number" name="calorie" placeholder="Calorie content (g)" onChange={this.handleEditChange}/>
+      <input type="number" name="calorie" placeholder="Calorie content (g)" onChange={this.handleEditChange.bind(this)}/>
       <br/>
-      <input type="number" name="carb" placeholder="Carb content (g)" onChange={this.handleEditChange}/>
+      <input type="number" name="carb" placeholder="Carb content (g)" onChange={this.handleEditChange.bind(this)}/>
       <br/>
-      <input type="number" name="protein" placeholder="Protein content (g)" onChange={this.handleEditChange}/>
+      <input type="number" name="protein" placeholder="Protein content (g)" onChange={this.handleEditChange.bind(this)}/>
       <br/>
-      <input type="number" name="fat" placeholder="Fat content (g)" onChange={this.handleEditChange}/>
+      <input type="number" name="fat" placeholder="Fat content (g)" onChange={this.handleEditChange.bind(this)}/>
       <br/>
-      <button onClick={this.saveFood}>Save</button>
+      <button onClick={this.saveFood.bind(this)}>Save</button>
     </div>;
   }
 }

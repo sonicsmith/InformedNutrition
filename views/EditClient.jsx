@@ -7,7 +7,7 @@ let database;
 let clientId;
 
 const getDayId = (weekDay, weekNumber) => {
-  const day = database.getCollection('days').where((obj) => {
+  const day = database.getCollection('clientsDays').where((obj) => {
     const weekDayMatch = obj.dayOfWeek == weekDay;
     const weekMatch = obj.week == weekNumber;
     const clientMatch = obj.clientId == clientId
@@ -61,22 +61,21 @@ export default class EditClient extends React.Component {
     const client = database.getCollection('clients').where((obj) => {
       return obj.$loki == clientId;
     });
-    let days = database.getCollection('days').where((obj) => {
+    this.state.client = client[0];
+    let days = database.getCollection('clientsDays').where((obj) => {
       return obj.clientId == clientId;
     });
-    this.state.client = client[0];
     this.state.days = days;
   }
 
   // Create a week
   handleClick() {
-    const daysCollection = database.getCollection('days');
     const weekNumber = (Object.keys(this.state.days).length)/7 + 1;
     for (var index = 1; index < 8; index++) {
-      daysCollection.insert({ clientId: this.state.client.$loki, week: weekNumber, dayOfWeek: index});
+      database.getCollection('clientsDays').insert({ clientId: this.state.client.$loki, week: weekNumber, dayOfWeek: index});
     }
     database.saveDatabase();
-    let days = daysCollection.where((obj) => {
+    let days = database.getCollection('clientsDays').where((obj) => {
       return obj.clientId == this.state.client.$loki;
     });
     this.setState({days: days});

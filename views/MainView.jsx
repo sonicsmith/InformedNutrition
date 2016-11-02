@@ -28,23 +28,30 @@ const onDatabaseLoad = () => {
     });
     database.saveDatabase();
   }
-  if (database.getCollection('days') == null) {
+  if (database.getCollection('clientsDays') == null) {
     console.log("Creating days collection");
-    var days = database.addCollection('days', {
+    var days = database.addCollection('clientsDays', {
       indices: ['clientId']
     });
     database.saveDatabase();
   }
-  if (database.getCollection('meals') == null) {
+  if (database.getCollection('daysMeals') == null) {
     console.log("Creating meals collection");
-    var meals = database.addCollection('meals', {
+    var meals = database.addCollection('daysMeals', {
       indices: ['clientId']
     });
     database.saveDatabase();
   }
-  if (database.getCollection('food') == null) {
+  if (database.getCollection('mealsFood') == null) {
+    console.log("Creating meals collection");
+    var meals = database.addCollection('mealsFood', {
+      indices: ['mealsId']
+    });
+    database.saveDatabase();
+  }
+  if (database.getCollection('foodBank') == null) {
     console.log("Creating food collection");
-    var meals = database.addCollection('food', {
+    var meals = database.addCollection('foodBank', {
       indices: ['name']
     });
     database.saveDatabase();
@@ -99,7 +106,6 @@ export default class MainView extends React.Component {
     this.state = {
       currentView: ""
     };
-    this.setParentState = this.setParentState.bind(this);
   }
 
   setParentState(changes) {
@@ -116,13 +122,13 @@ export default class MainView extends React.Component {
     return <div>
       <h1>InFormed Nutrition</h1>
       <div className="nav-buttons">
-        <NavigationButton text="Select Client" link="SelectClient" setParentState={this.setParentState}/>
-        <NavigationButton text="Add Client" link="AddClient" setParentState={this.setParentState}/>
-        <NavigationButton text="Add Food" link="AddFood" setParentState={this.setParentState}/>
+        <NavigationButton text="Select Client" link="SelectClient" setParentState={this.setParentState.bind(this)}/>
+        <NavigationButton text="Add Client" link="AddClient" setParentState={this.setParentState.bind(this)}/>
+        <NavigationButton text="Add Food" link="AddFood" setParentState={this.setParentState.bind(this)}/>
         <hr/>
       </div>
       <div>
-        <View state={this.state} setParentState={this.setParentState}/>
+        <View state={this.state} setParentState={this.setParentState.bind(this)}/>
       </div>
     </div>;
   }

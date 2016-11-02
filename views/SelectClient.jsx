@@ -12,8 +12,6 @@ export default class SelectClient extends React.Component {
       clientList: [{name:"loading"}],
       database: props.state.database
     };
-    this.handleSearchChange = this.handleSearchChange.bind(this);
-
     const clientCollection = this.state.database.getCollection('clients');
     this.state.clientList = clientCollection.where((obj) => {return true;});
   }
@@ -30,7 +28,7 @@ export default class SelectClient extends React.Component {
   render() {
     const list = this.state.clientList;
     return <div>
-      <input type="text" placeholder="Search" onChange={this.handleSearchChange}/>
+      <input type="text" placeholder="Search" onChange={this.handleSearchChange.bind(this)}/>
       <ul>
           {list.map((client) => {
             const id = client.$loki;

@@ -3,7 +3,7 @@
 
 import React from 'react';
 
-let dayId;
+let mealId;
 let mealNumber;
 let database;
 
@@ -18,20 +18,17 @@ export default class SelectFood extends React.Component {
       quantity: 1
     };
     this.handleSearchChange = this.handleSearchChange.bind(this);
-    dayId = props.state.dayId;
+    mealId = props.state.mealId;
     mealNumber = props.state.mealNumber;
     database = props.state.database;
-    const foodCollection = database.getCollection('food');
-    this.state.foodList = foodCollection.where((obj) => {return true;});
+    this.state.foodList = database.getCollection('foodBank').where((obj) => { return true; });
   }
 
   // Add food
   handleClick(id) {
     // save food to meal
-    const mealsCollection = database.getCollection('meals');
-    mealsCollection.insert({
-      dayId: dayId,
-      mealNumber: mealNumber,
+    database.getCollection('mealsFood').insert({
+      mealId: mealId,
       food: id,
       quantity: this.state.quantity
     });
