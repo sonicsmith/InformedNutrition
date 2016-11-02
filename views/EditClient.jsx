@@ -32,6 +32,22 @@ export class Week extends React.Component {
     this.state.setParentState({currentView: 'EditDay', dayId: dayId});
   }  
 
+  createPDF() {
+    console.log("createPDF clicked")
+    const remote = window.require('remote');
+    const currentWindow = remote.getCurrentWindow();
+    const contents = currentWindow.webContents;
+    contents.printToPDF({pageSize: 'A4', landscape: false}, (error, data) => {
+      if (error) throw error
+      const fileName = this.state.client + '-' + dayNumber + '-' + weekNumber + '.pdf';
+      fs.writeFile(__dirname + '/' + fileName, data, (error) => {
+        if (error) throw error
+        console.log('Write PDF successfully.')
+        alert("File Saved: " + fileName);
+      })
+    });
+  }
+
   render() {
     return <div>
       Week {this.state.weekNumber}:
@@ -42,6 +58,9 @@ export class Week extends React.Component {
       <button onClick={this.handleClick.bind(this, 5)}>F</button>
       <button onClick={this.handleClick.bind(this, 6)}>S</button>
       <button onClick={this.handleClick.bind(this, 7)}>S</button>
+      <button onClick={this.createPDF}>Create PDF</button>
+      <br/>
+      <br/>
     </div>;
   }
 

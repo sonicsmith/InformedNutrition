@@ -173,22 +173,6 @@ export default class EditDay extends React.Component {
     }
   }
 
-  // createPDF() {
-  //   console.log("createPDF clicked")
-  //   const remote = window.require('remote');
-  //   const currentWindow = remote.getCurrentWindow();
-  //   const contents = currentWindow.webContents;
-  //   contents.printToPDF({pageSize: 'A4', landscape: false}, (error, data) => {
-  //     if (error) throw error
-  //     const fileName = this.state.client + '-' + dayNumber + '-' + weekNumber + '.pdf';
-  //     fs.writeFile(__dirname + '/' + fileName, data, (error) => {
-  //       if (error) throw error
-  //       console.log('Write PDF successfully.')
-  //       alert("File Saved: " + fileName);
-  //     })
-  //   });
-  // }
-
   newDaysMeal() {
     console.log("Add new meal: " + this.state.newMealName)
     database.getCollection('daysMeals').insert({
@@ -207,6 +191,9 @@ export default class EditDay extends React.Component {
 
   render() {
     const meals = this.state.thisDaysMeals;
+    meals.sort((a, b) => {
+      return a.$loki - b.$loki;
+    })
     return <div>
       <h1>{this.state.client.name}</h1>
       <b>Intolerances:</b> {this.state.client.intolerances}<br/>
