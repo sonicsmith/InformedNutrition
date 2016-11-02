@@ -147,18 +147,19 @@ export default class EditDay extends React.Component {
 
   // Does same as in constructor, but triggers react
   countNutrients(forConstructor) {
+    console.log("Count");
     let totalNutrients = {calorie: 0, carb: 0, protein: 0, fat: 0};
     database.getCollection('daysMeals').where((meal) => {
       // If this days meal
       if (meal.dayId == dayId) {
         // Get food for this meal
         database.getCollection('mealsFood').where((food) => {
-          if (food.mealId == meal.mealId) {
-            const quantity = meal.quantity;
-            totalNutrients.calorie += food.calorie * quantity;
-            totalNutrients.carb += food.carb * quantity;
-            totalNutrients.protein += food.protein * quantity;
-            totalNutrients.fat += food.fat * quantity;
+          if (food.mealId == meal.$loki) {
+            let nutrients = getFoodFromId(food.food);
+            totalNutrients.calorie += nutrients.calorie * food.quantity;
+            totalNutrients.carb += nutrients.carb * food.quantity;
+            totalNutrients.protein += nutrients.protein * food.quantity;
+            totalNutrients.fat += nutrients.fat * food.quantity;
           }
           return true;
         })
