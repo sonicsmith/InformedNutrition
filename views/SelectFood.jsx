@@ -4,6 +4,7 @@
 import React from 'react';
 
 let mealId;
+let dishId;
 let mealNumber;
 let database;
 
@@ -19,6 +20,7 @@ export default class SelectFood extends React.Component {
     };
     this.handleSearchChange = this.handleSearchChange.bind(this);
     mealId = props.state.mealId;
+    dishId = props.state.dishId;
     mealNumber = props.state.mealNumber;
     database = props.state.database;
     this.state.foodList = database.getCollection('foodBank').where((obj) => { return true; });
@@ -26,14 +28,26 @@ export default class SelectFood extends React.Component {
 
   // Add food
   handleClick(id) {
-    // save food to meal
-    database.getCollection('mealsFood').insert({
-      mealId: mealId,
-      food: id,
-      quantity: this.state.quantity
-    });
-    database.saveDatabase();
-    this.state.setParentState({currentView: 'EditDay'});
+    console.log("Adding food, ID: " + id);
+    if (dishId == null) {
+      // save food to meal
+      database.getCollection('mealsFood').insert({
+        mealId: mealId,
+        foodId: id,
+        quantity: this.state.quantity
+      });
+      database.saveDatabase();
+      this.state.setParentState({currentView: 'EditDay'});
+    } else {
+      // save food to dish
+      database.getCollection('dishesFoods').insert({
+        dishId: dishId,
+        foodId: id,
+        quantity: this.state.quantity
+      });
+      database.saveDatabase();
+      this.state.setParentState({currentView: 'AddDish'});
+    }
   }
 
   handleSearchChange() {

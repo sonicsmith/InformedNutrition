@@ -14,15 +14,7 @@ let dayNumber;
 
 
 const getFoodFromId = (id) => {
-  const foods = database.getCollection('foodBank');
-  const food = foods.where((obj) => {return obj.$loki == id});
-  return food[0];
-}
-
-const foodForMeal = (obj, mealNumber) => {
-  const dayMatch = obj.dayId == dayId;
-  const mealMatch = obj.mealNumber == mealNumber;
-  return dayMatch && mealMatch;
+  return database.getCollection('foodBank').get(id);
 }
 
 
@@ -43,8 +35,12 @@ export class Meal extends React.Component {
   }
 
   addFood() {
-    this.state.setParentState({currentView: 'SelectFood', mealId: this.state.mealId});
-  }  
+    this.state.setParentState({currentView: 'SelectFood', mealId: this.state.mealId, dishId: null});
+  }
+
+  addDish() {
+    this.state.setParentState({currentView: 'SelectDish', mealId: this.state.mealId});
+  }
 
   updateReactMeals() {
     // // Update React
@@ -94,7 +90,7 @@ export class Meal extends React.Component {
       <ul>
         {thisMealsFood.map((food) => {
           const id = food.$loki;
-          const foodName = getFoodFromId(food.food).name;
+          const foodName = getFoodFromId(food.foodId).name;
           return <li key={id}>
             <input type="number" value={food.quantity} onChange={this.handleQuantityChange.bind(this, id)}/>
              x {foodName} <button onClick={this.removeFood.bind(this, id)}>-</button>
@@ -102,6 +98,7 @@ export class Meal extends React.Component {
         })}
       </ul>
       <button onClick={this.addFood.bind(this)}>Add Food</button>
+      <button onClick={this.addDish.bind(this)}>Add Dish</button>
       <br/>
       <br/>
     </div>;
@@ -155,7 +152,7 @@ export default class EditDay extends React.Component {
         // Get food for this meal
         database.getCollection('mealsFood').where((food) => {
           if (food.mealId == meal.$loki) {
-            let nutrients = getFoodFromId(food.food);
+            let nutrients = getFoodFromId(food.foodId);
             totalNutrients.calorie += nutrients.calorie * food.quantity;
             totalNutrients.carb += nutrients.carb * food.quantity;
             totalNutrients.protein += nutrients.protein * food.quantity;

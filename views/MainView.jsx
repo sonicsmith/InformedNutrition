@@ -6,7 +6,9 @@ import SelectClient from './SelectClient';
 import EditClient from './EditClient';
 import EditDay from './EditDay';
 import AddFood from './AddFood';
+import AddDish from './AddDish';
 import SelectFood from './SelectFood';
+import SelectDish from './SelectDish';
 import NavigationButton from './NavigationButton';
 import Loki from 'lokijs';
 
@@ -29,30 +31,44 @@ const onDatabaseLoad = () => {
     database.saveDatabase();
   }
   if (database.getCollection('clientsDays') == null) {
-    console.log("Creating days collection");
+    console.log("Creating clientsDays collection");
     var days = database.addCollection('clientsDays', {
       indices: ['clientId']
     });
     database.saveDatabase();
   }
   if (database.getCollection('daysMeals') == null) {
-    console.log("Creating meals collection");
+    console.log("Creating daysMeals collection");
     var meals = database.addCollection('daysMeals', {
       indices: ['clientId']
     });
     database.saveDatabase();
   }
-  if (database.getCollection('mealsFood') == null) {
-    console.log("Creating meals collection");
+  if (database.getCollection('mealsFood') == null) { // Also think: mealsDishes
+    console.log("Creating mealsFood collection");
     var meals = database.addCollection('mealsFood', {
       indices: ['mealsId']
     });
     database.saveDatabase();
   }
   if (database.getCollection('foodBank') == null) {
-    console.log("Creating food collection");
+    console.log("Creating foodBank collection");
     var meals = database.addCollection('foodBank', {
       indices: ['name']
+    });
+    database.saveDatabase();
+  }
+  if (database.getCollection('dishBank') == null) {
+    console.log("Creating dishBank collection");
+    var meals = database.addCollection('dishBank', {
+      indices: ['name']
+    });
+    database.saveDatabase();
+  }
+  if (database.getCollection('dishesFoods') == null) {
+    console.log("Creating dish collection");
+    var meals = database.addCollection('dishesFoods', {
+      indices: ['dishId']
     });
     database.saveDatabase();
     // Now add demoData
@@ -70,7 +86,6 @@ class View extends React.Component {
   }
 
   componentWillReceiveProps(props) {
-    console.log("View.componentWillReceiveProps");
     this.setState(props.state);
   }
 
@@ -90,8 +105,14 @@ class View extends React.Component {
     if (this.state.currentView == 'AddFood') {
       return <div><AddFood state={this.state} /></div>;
     }
+    if (this.state.currentView == 'AddDish') {
+      return <div><AddDish state={this.state} /></div>;
+    }
     if (this.state.currentView == 'SelectFood') {
       return <div><SelectFood state={this.state} /></div>;
+    }
+    if (this.state.currentView == 'SelectDish') {
+      return <div><SelectDish state={this.state} /></div>;
     }
     return <div><br/><br/>Select an option above</div>;
   }
@@ -114,7 +135,6 @@ export default class MainView extends React.Component {
   }
 
   componentWillReceiveProps(props) {
-    console.log("MainView.componentWillReceiveProps");
     this.setState(props);
   }
 
@@ -125,6 +145,7 @@ export default class MainView extends React.Component {
         <NavigationButton text="Select Client" link="SelectClient" setParentState={this.setParentState.bind(this)}/>
         <NavigationButton text="Add Client" link="AddClient" setParentState={this.setParentState.bind(this)}/>
         <NavigationButton text="Add Food" link="AddFood" setParentState={this.setParentState.bind(this)}/>
+        <NavigationButton text="Add Dish" link="AddDish" setParentState={this.setParentState.bind(this)}/>
         <hr/>
       </div>
       <div>

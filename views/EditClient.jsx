@@ -77,10 +77,7 @@ export default class EditClient extends React.Component {
     database = props.state.database;
     clientId = props.state.clientId;
     console.log("EditClient with clientId: "+clientId);
-    const client = database.getCollection('clients').where((obj) => {
-      return obj.$loki == clientId;
-    });
-    this.state.client = client[0];
+    this.state.client = database.getCollection('clients').get(clientId);
     let days = database.getCollection('clientsDays').where((obj) => {
       return obj.clientId == clientId;
     });
