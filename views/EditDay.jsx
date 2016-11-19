@@ -57,22 +57,31 @@ export class Meal extends React.Component {
 
   removeFood(id) {
     console.log("Remove food: "+id)
-    const food = database.getCollection('mealsFood').find({'$loki': id});
-    database.getCollection('mealsFood').remove(food[0]);
+    const food = database.getCollection('mealsFood').get(id);
+    database.getCollection('mealsFood').remove(food);
     database.saveDatabase();
     this.updateReactMeals();
   }
 
   handleQuantityChange(id, event) {
-    const food = database.getCollection('mealsFood').find({'$loki': id});
-    food[0].quantity = event.target.value;
-    database.getCollection('mealsFood').update(food[0]);
+    const food = database.getCollection('mealsFood').get(id);
+    food.quantity = event.target.value;
+    database.getCollection('mealsFood').update(food);
     database.saveDatabase();
     this.updateReactMeals();
   }
 
-  handleEditChange() {
+  handleEditChange(event) {
+    const editType = event.target.name;
+    this.setState({[editType]: event.target.value});
+  }
 
+  saveRecipe() {
+    const meal = database.getCollection('daysMeals').get(this.state.mealId);
+    meal.recipe = this.state.recipe;
+    database.getCollection('daysMeals').update(meal);
+    database.saveDatabase();
+    alert("Recipe Saved.");
   }
 
   removeMeal() {
@@ -85,7 +94,7 @@ export class Meal extends React.Component {
       database.getCollection('mealsFood').remove(food);
     });
     // Remove meal
-    let mealToRemove = database.getCollection('daysMeals').find({'$loki' : this.state.mealId});
+    let mealToRemove = database.getCollection('daysMeals').get(this.state.mealId);
     console.log(mealToRemove)
     database.getCollection('daysMeals').remove(mealToRemove[0]);
     database.saveDatabase();
@@ -111,6 +120,8 @@ export class Meal extends React.Component {
       <br/>
       <br/>
       <textarea rows="5" type="text" name="recipe" value={this.state.recipe} onChange={this.handleEditChange.bind(this)}/>
+      <br/>
+      <button onClick={this.saveRecipe.bind(this)}>Save Recipe</button>
       <br/>
     </div>;
   }

@@ -53,6 +53,7 @@ export default class AddDish extends React.Component {
     });
     database.saveDatabase();
     let lastEntryId = 0;
+    // FInd the entry we have just created
     database.getCollection('dishBank').where(
       (obj) => {
         if (obj.$loki > lastEntryId) {
@@ -89,17 +90,17 @@ export default class AddDish extends React.Component {
   }
 
   updateReactMeals() {
-    // // // Update React
-    // this.setState({thisMealsFood: database.getCollection('mealsFood').where(
-    //   (obj) => {return obj.mealId == this.state.mealId}
-    // )});
-    // this.state.countNutrients(false);
+    // Update React
+    this.setState({thisDishesFood: database.getCollection('dishesFoods').where(
+      (obj) => {return obj.dishId == this.state.dishId}
+    )});
+    this.state.countNutrients(false);
   }
 
   removeFood(id) {
     console.log("Remove food: "+id)
-    const food = database.getCollection('dishesFoods').find({'$loki': id});
-    database.getCollection('mealsFood').remove(food[0]);
+    const food = database.getCollection('dishesFoods').get(id);
+    database.getCollection('mealsFood').remove(food);
     database.saveDatabase();
     this.updateReactMeals();
   }
@@ -109,7 +110,7 @@ export default class AddDish extends React.Component {
     food.quantity = event.target.value;
     database.getCollection('dishesFoods').update(food);
     database.saveDatabase();
-    // this.updateReactMeals();
+    this.updateReactMeals();
   }
 
   saveRecipe() {
@@ -117,6 +118,7 @@ export default class AddDish extends React.Component {
     dish.recipe = this.state.recipe;
     database.getCollection('dishBank').update(dish);
     database.saveDatabase();
+    alert("Recipe Saved.");
   }
 
   render() {
