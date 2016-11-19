@@ -5,7 +5,7 @@ import React from 'react';
 
 let mealId;
 let dishId;
-let mealNumber;
+// let mealNumber;
 let database;
 
 
@@ -21,7 +21,7 @@ export default class SelectFood extends React.Component {
     this.handleSearchChange = this.handleSearchChange.bind(this);
     mealId = props.state.mealId;
     dishId = props.state.dishId;
-    mealNumber = props.state.mealNumber;
+    // mealNumber = props.state.mealNumber;
     database = props.state.database;
     this.state.foodList = database.getCollection('foodBank').where((obj) => { return true; });
   }

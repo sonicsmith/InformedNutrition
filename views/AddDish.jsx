@@ -7,11 +7,6 @@ import Loki from 'lokijs';
 let database;
 
 
-const getFoodFromId = (id) => {
-  return database.getCollection('foodBank').get(id);
-}
-
-
 export default class AddDish extends React.Component {
 
   constructor(props) {
@@ -37,6 +32,7 @@ export default class AddDish extends React.Component {
       );
       this.state.saved = true;
     }
+    this.countNutrients(true);
   }
 
   handleEditChange(event) {
@@ -71,6 +67,27 @@ export default class AddDish extends React.Component {
     console.log("Saved dish: " + this.state.dishname + ", with Id: " + lastEntryId);
   }
 
+  // Does same as in constructor, but triggers react
+  countNutrients(forConstructor) {
+    console.log("Count");
+    let totalNutrients = {calorie: 0, carb: 0, protein: 0, fat: 0};
+    database.getCollection('dishesFoods').where((food) => {
+      if (food.dishId == this.state.dishId) {
+        let nutrients = database.getCollection('foodBank').get(food.foodId);
+        totalNutrients.calorie += nutrients.calorie * food.quantity;
+        totalNutrients.carb += nutrients.carb * food.quantity;
+        totalNutrients.protein += nutrients.protein * food.quantity;
+        totalNutrients.fat += nutrients.fat * food.quantity;
+      }
+      return true;
+    });
+    if (forConstructor) {
+      this.state.totalNutrients = totalNutrients;
+    } else {
+      this.setState({totalNutrients: totalNutrients});
+    }
+  }
+
   updateReactMeals() {
     // // // Update React
     // this.setState({thisMealsFood: database.getCollection('mealsFood').where(
@@ -80,11 +97,11 @@ export default class AddDish extends React.Component {
   }
 
   removeFood(id) {
-    // console.log("Remove food: "+id)
-    // const food = database.getCollection('mealsFood').find({'$loki': id});
-    // database.getCollection('mealsFood').remove(food[0]);
-    // database.saveDatabase();
-    // this.updateReactMeals();
+    console.log("Remove food: "+id)
+    const food = database.getCollection('dishesFoods').find({'$loki': id});
+    database.getCollection('mealsFood').remove(food[0]);
+    database.saveDatabase();
+    this.updateReactMeals();
   }
 
   handleQuantityChange(id, event) {
@@ -96,7 +113,10 @@ export default class AddDish extends React.Component {
   }
 
   saveRecipe() {
-
+    const dish = database.getCollection('dishBank').get(this.state.dishId);
+    dish.recipe = this.state.recipe;
+    database.getCollection('dishBank').update(dish);
+    database.saveDatabase();
   }
 
   render() {
@@ -112,10 +132,15 @@ export default class AddDish extends React.Component {
             :  
           <div>
             <b>{this.state.dishname}:</b>
+            <br/>
+            <b>Nutrition Totals: </b>
+            <br/>
+            Calorie: {this.state.totalNutrients.calorie}, Carb: {this.state.totalNutrients.carb}, 
+            Protein: {this.state.totalNutrients.protein}, Fat: {this.state.totalNutrients.fat}<br/>
             <ul>
               {thisDishesFood.map((food) => {
                 const id = food.$loki;
-                const foodName = getFoodFromId(food.foodId).name;
+                const foodName = database.getCollection('foodBank').get(food.foodId).name;
                 return <li key={id}>
                   <input type="number" value={food.quantity} onChange={this.handleQuantityChange.bind(this, id)}/>
                   x {foodName} <button onClick={this.removeFood.bind(this, id)}>-</button>

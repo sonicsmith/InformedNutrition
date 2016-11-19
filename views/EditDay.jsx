@@ -26,12 +26,17 @@ export class Meal extends React.Component {
       mealId: props.mealId,
       mealName: props.mealName,
       setParentState: props.setParentState,
-      countNutrients: props.countNutrients
+      countNutrients: props.countNutrients,
+      recipe: ""
     }
     // Get all meals from this day for this mealType
     this.state.thisMealsFood = database.getCollection('mealsFood').where(
       (obj) => {return obj.mealId == this.state.mealId} 
     );
+    const meal = database.getCollection('daysMeals').get(this.state.mealId);
+    if (meal.recipe != undefined) {
+      this.state.recipe = meal.recipe;
+    }
   }
 
   addFood() {
@@ -64,6 +69,10 @@ export class Meal extends React.Component {
     database.getCollection('mealsFood').update(food[0]);
     database.saveDatabase();
     this.updateReactMeals();
+  }
+
+  handleEditChange() {
+
   }
 
   removeMeal() {
@@ -100,6 +109,8 @@ export class Meal extends React.Component {
       <button onClick={this.addFood.bind(this)}>Add Food</button>
       <button onClick={this.addDish.bind(this)}>Add Dish</button>
       <br/>
+      <br/>
+      <textarea rows="5" type="text" name="recipe" value={this.state.recipe} onChange={this.handleEditChange.bind(this)}/>
       <br/>
     </div>;
   }
