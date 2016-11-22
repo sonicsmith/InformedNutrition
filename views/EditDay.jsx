@@ -4,18 +4,11 @@
 import React from 'react';
 const fs = require('fs');
 
-
-
 let clientId;
 let database;
 let dayId;
 let weekNumber;
 let dayNumber;
-
-
-const getFoodFromId = (id) => {
-  return database.getCollection('foodBank').get(id);
-}
 
 
 export class Meal extends React.Component {
@@ -27,6 +20,7 @@ export class Meal extends React.Component {
       mealName: props.mealName,
       setParentState: props.setParentState,
       countNutrients: props.countNutrients,
+      dishName: "",
       recipe: ""
     }
     // Get all meals from this day for this mealType
@@ -34,6 +28,9 @@ export class Meal extends React.Component {
       (obj) => {return obj.mealId == this.state.mealId} 
     );
     const meal = database.getCollection('daysMeals').get(this.state.mealId);
+    if (meal.dishName != undefined) {
+      this.state.dishName = meal.dishName;
+    }
     if (meal.recipe != undefined) {
       this.state.recipe = meal.recipe;
     }
@@ -56,7 +53,7 @@ export class Meal extends React.Component {
   }
 
   removeFood(id) {
-    console.log("Remove food: "+id)
+    console.log("Remove food: " + id)
     const food = database.getCollection('mealsFood').get(id);
     database.getCollection('mealsFood').remove(food);
     database.saveDatabase();
@@ -74,30 +71,31 @@ export class Meal extends React.Component {
   handleEditChange(event) {
     const editType = event.target.name;
     this.setState({[editType]: event.target.value});
+    this.saveDishChanges();
   }
 
-  saveRecipe() {
+  saveDishChanges() {
     const meal = database.getCollection('daysMeals').get(this.state.mealId);
+    meal.dishName = this.state.dishName;
     meal.recipe = this.state.recipe;
     database.getCollection('daysMeals').update(meal);
     database.saveDatabase();
-    alert("Recipe Saved.");
   }
 
   removeMeal() {
     // Remove all food for meal first
-    const foodToRemove = database.getCollection('mealsFood').where(
-      (obj) => {return obj.mealId == this.state.mealId;}
-    );
+    console.log("Removing meal")
+    const foodToRemove = database.getCollection('mealsFood').where((obj) => {
+      return obj.mealId == this.state.mealId;
+    });
     foodToRemove.map((food) => {
-      console.log("food"+food);
       database.getCollection('mealsFood').remove(food);
     });
     // Remove meal
     let mealToRemove = database.getCollection('daysMeals').get(this.state.mealId);
-    console.log(mealToRemove)
-    database.getCollection('daysMeals').remove(mealToRemove[0]);
+    database.getCollection('daysMeals').remove(mealToRemove);
     database.saveDatabase();
+    console.log("Meal removed");
     this.updateReactMeals();
   }
 
@@ -105,10 +103,11 @@ export class Meal extends React.Component {
     const thisMealsFood = this.state.thisMealsFood;
     return <div>
       <b>{this.state.mealName}</b><button onClick={this.removeMeal.bind(this)}>-</button><br/>
+      <input type="text" name="dishName" value={this.state.dishName} onChange={this.handleEditChange.bind(this)}/>
       <ul>
         {thisMealsFood.map((food) => {
           const id = food.$loki;
-          const foodName = getFoodFromId(food.foodId).name;
+          const foodName = database.getCollection('foodBank').get(food.foodId).name;
           return <li key={id}>
             <input type="number" value={food.quantity} onChange={this.handleQuantityChange.bind(this, id)}/>
              x {foodName} <button onClick={this.removeFood.bind(this, id)}>-</button>
@@ -120,8 +119,6 @@ export class Meal extends React.Component {
       <br/>
       <br/>
       <textarea rows="5" type="text" name="recipe" value={this.state.recipe} onChange={this.handleEditChange.bind(this)}/>
-      <br/>
-      <button onClick={this.saveRecipe.bind(this)}>Save Recipe</button>
       <br/>
     </div>;
   }
@@ -147,15 +144,10 @@ export default class EditDay extends React.Component {
     clientId = props.state.clientId;
     console.log("Edit dayId: " + dayId + " with clientId: " + clientId);
     // Get Client Name
-    const client = database.getCollection('clients').where((obj) => {
-      return obj.$loki == clientId;
-    });
-    this.state.client = client[0];
-    const day = database.getCollection('clientsDays').where((obj) => {
-      return obj.$loki == dayId;
-    });
-    dayNumber = day[0].dayOfWeek;
-    weekNumber = day[0].week;
+    this.state.client = database.getCollection('clients').get(clientId);
+    const day = database.getCollection('clientsDays').get(dayId);
+    dayNumber = day.dayOfWeek;
+    weekNumber = day.week;
     // 
     this.state.thisDaysMeals = database.getCollection('daysMeals').where((obj) => {
       return obj.dayId == dayId;
@@ -174,7 +166,7 @@ export default class EditDay extends React.Component {
         // Get food for this meal
         database.getCollection('mealsFood').where((food) => {
           if (food.mealId == meal.$loki) {
-            let nutrients = getFoodFromId(food.foodId);
+            let nutrients = database.getCollection('foodBank').get(food.foodId);
             totalNutrients.calorie += nutrients.calorie * food.quantity;
             totalNutrients.carb += nutrients.carb * food.quantity;
             totalNutrients.protein += nutrients.protein * food.quantity;
@@ -209,7 +201,10 @@ export default class EditDay extends React.Component {
   }
 
   render() {
-    const meals = this.state.thisDaysMeals;
+    // this.state.thisDaysMeals not in use since we do this below
+    const meals = database.getCollection('daysMeals').where((obj) => { 
+      return obj.dayId == dayId;
+    });
     meals.sort((a, b) => {
       return a.$loki - b.$loki;
     })

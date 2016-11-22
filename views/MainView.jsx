@@ -9,6 +9,7 @@ import AddFood from './AddFood';
 import AddDish from './AddDish';
 import SelectFood from './SelectFood';
 import SelectDish from './SelectDish';
+import WeekView from './WeekView';
 import NavigationButton from './NavigationButton';
 import Loki from 'lokijs';
 
@@ -113,6 +114,9 @@ class View extends React.Component {
     }
     if (this.state.currentView == 'SelectDish') {
       return <div><SelectDish state={this.state} /></div>;
+    }
+    if (this.state.currentView == 'WeekView') {
+      return <div><WeekView state={this.state} /></div>;
     }
     return <div><br/><br/>Select an option above</div>;
   }

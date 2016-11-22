@@ -14,7 +14,7 @@ export default class AddDish extends React.Component {
     this.state = {
       setParentState: props.state.setParentState,
       dishId: -1,
-      dishname: "",
+      dishName: "",
       thisDishesFood: [],
       recipe: "",
       saved: false
@@ -25,7 +25,7 @@ export default class AddDish extends React.Component {
       console.log("Reloading last dish.")
       const currentDish = database.getCollection('dishBank').get(props.state.dishId);
       this.state.dishId = currentDish.$loki;
-      this.state.dishname = currentDish.name;
+      this.state.dishName = currentDish.dishName;
       this.state.recipe = currentDish.recipe;
       this.state.thisDishesFood = database.getCollection('dishesFoods').where(
         (obj) => {return obj.dishId == this.state.dishId} 
@@ -48,14 +48,13 @@ export default class AddDish extends React.Component {
   createDish() {
     // Create an entry
     database.getCollection('dishBank').insert({
-      name: this.state.dishname,
+      dishName: this.state.dishName,
       recipe: ""
     });
     database.saveDatabase();
     let lastEntryId = 0;
     // FInd the entry we have just created
-    database.getCollection('dishBank').where(
-      (obj) => {
+    database.getCollection('dishBank').where((obj) => {
         if (obj.$loki > lastEntryId) {
           lastEntryId = obj.$loki;
         }
@@ -65,7 +64,7 @@ export default class AddDish extends React.Component {
     this.state.dishId = lastEntryId;
     // Unlock the input boxes
     this.setState({ saved: true });
-    console.log("Saved dish: " + this.state.dishname + ", with Id: " + lastEntryId);
+    console.log("Saved dish: " + this.state.dishName + ", with Id: " + lastEntryId);
   }
 
   // Does same as in constructor, but triggers react
@@ -127,13 +126,13 @@ export default class AddDish extends React.Component {
 
       <div>
         {(!this.state.saved ? <div>
-            <input type="text" name="dishname" placeholder="Dish Name" onChange={this.handleEditChange.bind(this)}/>
+            <input type="text" name="dishName" placeholder="Dish Name" onChange={this.handleEditChange.bind(this)}/>
             <br/>
             <button onClick={this.createDish.bind(this)}>Create Dish</button>
           </div> 
             :  
           <div>
-            <b>{this.state.dishname}:</b>
+            <b>{this.state.dishName}:</b>
             <br/>
             <b>Nutrition Totals: </b>
             <br/>

@@ -38,9 +38,10 @@ export default class SelectDish extends React.Component {
       });
       index++; 
     }
-    // recipe
+    // name and recipe
     const dish = database.getCollection('dishBank').get(id);
     const meal = database.getCollection('daysMeals').get(mealId);
+    meal.dishName = dish.dishName;
     meal.recipe = dish.recipe;
     database.getCollection('daysMeals').update(meal);
     database.saveDatabase();
@@ -59,7 +60,7 @@ export default class SelectDish extends React.Component {
           {list.map((dish) => {
             const id = dish.$loki;
             return <li key={id}>
-              {dish.name}
+              {dish.dishName}
               <button onClick={this.handleClick.bind(this, id)}>+</button>
             </li>;
           })}
