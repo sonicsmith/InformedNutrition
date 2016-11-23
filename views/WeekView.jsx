@@ -21,15 +21,12 @@ export class FoodView extends React.Component {
 
   render() {
     return <div>
-      <ul>
-        {this.state.food.map((food) => {
-          const foodDescription = database.getCollection('foodBank').get(food.foodId);
-          return <li key={food.$loki}>
-            {food.quantity}
-            {foodDescription.name}
-          </li>
-        })}
-      </ul>
+      {this.state.food.map((food) => {
+        const foodDescription = database.getCollection('foodBank').get(food.foodId);
+        return <div key={food.$loki}>
+          {food.quantity} {foodDescription.name}
+        </div>
+      })}
     </div>
   }
 
@@ -47,9 +44,7 @@ export class MealView extends React.Component {
 
   render() {
     return <div>
-      {this.state.meal.name}
-      <br/>
-      {this.state.meal.dishName}
+      <b>{this.state.meal.name}</b> - <i>{this.state.meal.dishName}</i>
       <br/>
       <FoodView mealId={this.state.meal.$loki}/>
       <br/>
@@ -76,12 +71,10 @@ export class DayView extends React.Component {
 
   render() {
     return <div>
-      {this.state.dayName}
-      <ul>
-        {this.state.thisDaysMeals.map((meal) => {
-          return <li key={meal.$loki}><MealView mealId={meal.$loki}/></li>
-        })}
-      </ul>
+      <h3><u>{this.state.dayName}</u></h3>
+      {this.state.thisDaysMeals.map((meal) => {
+        return <MealView mealId={meal.$loki} key={meal.$loki}/>
+      })}
     </div>
   }
 
@@ -94,11 +87,20 @@ export default class WeekView extends React.Component {
   constructor(props) {
     super();
     this.state = {
-      startDay: props.state.startDay
+      startDay: props.state.startDay,
+      date: "",
+      intro: ""
     }
     database = props.state.database;
     clientId = props.state.clientId;
     console.log("Week starting with dayID: " + this.state.startDay);
+    const day = database.getCollection('clientsDays').get(this.state.startDay);
+    if (day.date) {
+      this.state.date = day.date;
+    }
+    if (day.intro) {
+      this.state.intro = day.intro;
+    }
   }
 
   createPDF() {
@@ -119,7 +121,13 @@ export default class WeekView extends React.Component {
   }
 
   render() {
+    const client = database.getCollection('clients').get(clientId);
       return <div>
+        <h2><u>Meal Plan for {client.name}</u> {this.state.date}</h2>
+        <br/>
+        {this.state.intro}
+        <br/>
+        <br/>
         <DayView dayId={this.state.startDay + 0} dayName="Monday"/>
         <DayView dayId={this.state.startDay + 1} dayName="Tuesday"/>
         <DayView dayId={this.state.startDay + 2} dayName="Wednesday"/>
