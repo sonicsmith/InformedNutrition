@@ -121,23 +121,23 @@ export default class EditClient extends React.Component {
         dayOfWeek: index
       });
     }
-    database.saveDatabase();
     // If there's a previous week for us to replicate'
     if (weekNumber > 1) {
       const thisWeeksDays = getDaysForWeek(weekNumber);
       const lastWeeksDays = getDaysForWeek(weekNumber - 1);
-
       // Go through the days of the last week
       for (let dayNumber = 0; dayNumber < 7; dayNumber++) {
-
         // Get previous days Meals
+        let numberOfMeals = 0;
         const previousDaysMeals = database.getCollection('daysMeals').where((obj) => {
-          return obj.dayId == lastWeeksDays[dayNumber].$loki;
+          const match = obj.dayId == lastWeeksDays[dayNumber].$loki;
+          if (match) {
+            numberOfMeals++;
+          }
+          return match;
         });
-
         // Add meals to this new day
-        let mealNumber = 0;
-        while (previousDaysMeals[mealNumber] != undefined) {
+        for (let mealNumber = numberOfMeals - 1; mealNumber >= 0; mealNumber--) {
           const meal = previousDaysMeals[mealNumber]
           const newMeal = database.getCollection('daysMeals').insert({
             dayId: thisWeeksDays[dayNumber].$loki, 
@@ -145,29 +145,28 @@ export default class EditClient extends React.Component {
             dishName: meal.dishName,
             recipe: meal.recipe
           });
-
           // Find each food from Meal, add to meal
+          let numberOfFood = 0;
           const mealsFood = database.getCollection('mealsFood').where((obj) => {
-            return obj.mealId == meal.$loki;
+            const match = obj.mealId == meal.$loki;
+            if (match) {
+              numberOfFood++;
+            }
+            return match;
           });
-          let foodNumber = 0;
-          while (mealsFood[foodNumber] != undefined) {
+          for (let foodNumber = numberOfFood - 1; foodNumber >= 0; foodNumber--) {
             const food = mealsFood[foodNumber];
             database.getCollection('mealsFood').insert({
               mealId: newMeal.$loki,
               foodId: food.foodId,
               quantity: food.quantity
             });
-            foodNumber++;
           }
-
-          mealNumber++;
         }
-
       }
-
     }
-
+    database.saveDatabase();
+    // Refresh the view
     const days = database.getCollection('clientsDays').where((obj) => {
       return obj.clientId == this.state.client.$loki;
     });

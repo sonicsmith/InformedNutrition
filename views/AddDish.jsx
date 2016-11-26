@@ -47,7 +47,7 @@ export default class AddDish extends React.Component {
 
   createDish() {
     // Create an entry
-    lastEntry = database.getCollection('dishBank').insert({
+    const lastEntry = database.getCollection('dishBank').insert({
       dishName: this.state.dishName,
       recipe: ""
     });
