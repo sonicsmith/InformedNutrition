@@ -27,7 +27,9 @@ export default class SelectFood extends React.Component {
   }
 
   // Add food
-  handleClick(id) {
+  addFood(id) {
+    // TODO: If duplicate then return and alert user
+
     console.log("Adding food, ID: " + id);
     if (dishId == null) {
       // save food to meal
@@ -72,7 +74,7 @@ export default class SelectFood extends React.Component {
             return <li key={id}>      
               <input type="number" name={quantityFoodName} onChange={this.handleQuantityChange.bind(this)}/>
               {food.name}
-              <button onClick={this.handleClick.bind(this, id)}>+</button>
+              <button onClick={this.addFood.bind(this, id)}>+</button>
             </li>;
           })}
       </ul>

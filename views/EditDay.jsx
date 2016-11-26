@@ -10,6 +10,7 @@ let dayId;
 let weekNumber;
 let dayNumber;
 
+// TODO: Mechanism for blocking foods and dishes
 
 export class Meal extends React.Component {
 

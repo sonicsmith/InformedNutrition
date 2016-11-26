@@ -47,24 +47,15 @@ export default class AddDish extends React.Component {
 
   createDish() {
     // Create an entry
-    database.getCollection('dishBank').insert({
+    lastEntry = database.getCollection('dishBank').insert({
       dishName: this.state.dishName,
       recipe: ""
     });
     database.saveDatabase();
-    let lastEntryId = 0;
-    // FInd the entry we have just created
-    database.getCollection('dishBank').where((obj) => {
-        if (obj.$loki > lastEntryId) {
-          lastEntryId = obj.$loki;
-        }
-        return true;
-      }
-    );
-    this.state.dishId = lastEntryId;
+    this.state.dishId = lastEntry.$loki;
     // Unlock the input boxes
     this.setState({ saved: true });
-    console.log("Saved dish: " + this.state.dishName + ", with Id: " + lastEntryId);
+    console.log("Saved dish: " + this.state.dishName + ", with Id: " + lastEntry.$loki);
   }
 
   // Does same as in constructor, but triggers react

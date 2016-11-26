@@ -23,7 +23,9 @@ export default class SelectDish extends React.Component {
   }
 
   // Add Dish
-  handleClick(id) {
+  addDish(id) {
+    // TODO: If duplicate then return and alert user
+    
     // Get all the food from dish
     const dishesFoods = database.getCollection('dishesFoods').where((obj) => { return obj.dishId == id; });
     // save to the meal
@@ -61,7 +63,7 @@ export default class SelectDish extends React.Component {
             const id = dish.$loki;
             return <li key={id}>
               {dish.dishName}
-              <button onClick={this.handleClick.bind(this, id)}>+</button>
+              <button onClick={this.addDish.bind(this, id)}>+</button>
             </li>;
           })}
       </ul>

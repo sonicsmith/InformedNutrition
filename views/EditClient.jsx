@@ -85,6 +85,15 @@ export class Week extends React.Component {
 }
 
 
+
+const getDaysForWeek = (weekNumber) => {
+  return database.getCollection('clientsDays').where((obj) => {
+    const thisClient = obj.clientId == clientId;
+    const rightWeek = obj.week == weekNumber;
+    return thisClient && rightWeek;
+  });
+}
+
 export default class EditClient extends React.Component {
 
   constructor(props) {
@@ -103,12 +112,62 @@ export default class EditClient extends React.Component {
   }
 
   // Create a week
-  handleClick() {
+  createWeek() {
     const weekNumber = (Object.keys(this.state.days).length)/7 + 1;
     for (var index = 1; index < 8; index++) {
-      database.getCollection('clientsDays').insert({ clientId: this.state.client.$loki, week: weekNumber, dayOfWeek: index});
+      database.getCollection('clientsDays').insert({ 
+        clientId: this.state.client.$loki,
+        week: weekNumber,
+        dayOfWeek: index
+      });
     }
     database.saveDatabase();
+    // If there's a previous week for us to replicate'
+    if (weekNumber > 1) {
+      const thisWeeksDays = getDaysForWeek(weekNumber);
+      const lastWeeksDays = getDaysForWeek(weekNumber - 1);
+
+      // Go through the days of the last week
+      for (let dayNumber = 0; dayNumber < 7; dayNumber++) {
+
+        // Get previous days Meals
+        const previousDaysMeals = database.getCollection('daysMeals').where((obj) => {
+          return obj.dayId == lastWeeksDays[dayNumber].$loki;
+        });
+
+        // Add meals to this new day
+        let mealNumber = 0;
+        while (previousDaysMeals[mealNumber] != undefined) {
+          const meal = previousDaysMeals[mealNumber]
+          const newMeal = database.getCollection('daysMeals').insert({
+            dayId: thisWeeksDays[dayNumber].$loki, 
+            name: meal.name,
+            dishName: meal.dishName,
+            recipe: meal.recipe
+          });
+
+          // Find each food from Meal, add to meal
+          const mealsFood = database.getCollection('mealsFood').where((obj) => {
+            return obj.mealId == meal.$loki;
+          });
+          let foodNumber = 0;
+          while (mealsFood[foodNumber] != undefined) {
+            const food = mealsFood[foodNumber];
+            database.getCollection('mealsFood').insert({
+              mealId: newMeal.$loki,
+              foodId: food.foodId,
+              quantity: food.quantity
+            });
+            foodNumber++;
+          }
+
+          mealNumber++;
+        }
+
+      }
+
+    }
+
     const days = database.getCollection('clientsDays').where((obj) => {
       return obj.clientId == this.state.client.$loki;
     });
@@ -130,7 +189,7 @@ export default class EditClient extends React.Component {
       <ul>
         {weeks}
       </ul>
-      <button onClick={this.handleClick.bind(this)}>Add Week</button>
+      <button onClick={this.createWeek.bind(this)}>Add Week</button>
     </div>;
   }
 }

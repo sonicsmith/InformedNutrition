@@ -100,6 +100,27 @@ export function setDemoData(database) {
       protein: 10,
       fat: 5
     });
+    // Add some Dishes
+    const dishCollection = database.getCollection('dishBank');
+    dishCollection.insert({
+      dishName: "Roast Chicken",
+      recipe: "Get the chicken. Kill, then cook."
+    });
+    dishCollection.insert({
+      dishName: "Beef Burger",
+      recipe: "Take the buns, throw some meat between."
+    });
+    const dishesFoodsCollection = database.getCollection('dishesFoods');
+    dishesFoodsCollection.insert({
+      dishId: 1,
+      foodId: 4,
+      quantity: 3
+    });
+    dishesFoodsCollection.insert({
+      dishId: 2,
+      foodId: 5,
+      quantity: 2
+    });
     // Save all
     database.saveDatabase();
 }
