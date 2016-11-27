@@ -2,7 +2,6 @@
 'use babel';
 
 import React from 'react';
-const fs = require('fs');
 
 let clientId;
 let database;
@@ -72,10 +71,10 @@ export class Meal extends React.Component {
   handleEditChange(event) {
     const editType = event.target.name;
     this.setState({[editType]: event.target.value});
-    this.saveDishChanges();
   }
 
-  saveDishChanges() {
+  saveMealInfo() {
+    console.log("Saving changes to meal")
     const meal = database.getCollection('daysMeals').get(this.state.mealId);
     meal.dishName = this.state.dishName;
     meal.recipe = this.state.recipe;
@@ -104,7 +103,7 @@ export class Meal extends React.Component {
     const thisMealsFood = this.state.thisMealsFood;
     return <div>
       <b>{this.state.mealName}</b><button onClick={this.removeMeal.bind(this)}>-</button><br/>
-      <input type="text" name="dishName" value={this.state.dishName} onChange={this.handleEditChange.bind(this)}/>
+      <input type="text" name="dishName" value={this.state.dishName} onChange={this.handleEditChange.bind(this)} onBlur={this.saveMealInfo.bind(this)}/>
       <ul>
         {thisMealsFood.map((food) => {
           const id = food.$loki;

@@ -9,6 +9,13 @@ let dishId;
 let database;
 
 
+
+const duplicateExists = (id, collection) => {
+
+  return
+}
+
+
 export default class SelectFood extends React.Component {
 
   constructor(props) {
@@ -29,27 +36,43 @@ export default class SelectFood extends React.Component {
   // Add food
   addFood(id) {
     // TODO: If duplicate then return and alert user
-
+    const previousScreen = (dishId == null ? 'EditDay' : 'AddDish');
     console.log("Adding food, ID: " + id);
     if (dishId == null) {
-      // save food to meal
-      database.getCollection('mealsFood').insert({
-        mealId: mealId,
-        foodId: id,
-        quantity: this.state.quantity
+      const mealsFood = database.getCollection('mealsFood').where((obj) => {
+        const mealMatch = obj.mealId == mealId;
+        const foodMatch = obj.foodId == id;
+        return mealMatch && foodMatch;
       });
-      database.saveDatabase();
-      this.state.setParentState({currentView: 'EditDay'});
+      if (mealsFood[0] != undefined) {
+        alert('This food already exists in the meal.')
+      } else {
+        // save food to meal
+        database.getCollection('mealsFood').insert({
+          mealId: mealId,
+          foodId: id,
+          quantity: this.state.quantity
+        });
+      }
     } else {
-      // save food to dish
-      database.getCollection('dishesFoods').insert({
-        dishId: dishId,
-        foodId: id,
-        quantity: this.state.quantity
+      const dishesFood = database.getCollection('dishesFoods').where((obj) => {
+        const dishMatch = obj.dishId == dishId;
+        const foodMatch = obj.foodId == id;
+        return dishMatch && foodMatch;
       });
-      database.saveDatabase();
-      this.state.setParentState({currentView: 'AddDish'});
+      if (dishesFood[0] != undefined) {
+        alert('This food already exists in the dish.')
+      } else {
+        // save food to dish
+        database.getCollection('dishesFoods').insert({
+          dishId: dishId,
+          foodId: id,
+          quantity: this.state.quantity
+        });
+      }
     }
+    database.saveDatabase();
+    this.state.setParentState({currentView: previousScreen});
   }
 
   handleSearchChange() {

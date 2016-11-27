@@ -52,20 +52,19 @@ export class Week extends React.Component {
     this.setState({[editType]: event.target.value});
   }
 
-  saveWeekDetails() {
+  saveWeekInfo() {
     // Save week Details to first day of week
     const dayId = getDayId(1, this.state.weekNumber);
     const day = database.getCollection('clientsDays').get(dayId);
     day.date = this.state.date;
     day.intro = this.state.intro;
-    alert('Details Saved');
   }
 
   render() {
     return <div>
       Week {this.state.weekNumber}:
       <br/>
-      <input type="text" name="date" placeholder="Date" value={this.state.date} onChange={this.handleEditChange.bind(this)}/>
+      <input type="text" name="date" placeholder="Date" value={this.state.date} onChange={this.handleEditChange.bind(this)} onBlur={this.saveWeekInfo.bind(this)}/>
       <br/>
       <button onClick={this.handleClick.bind(this, 1)}>M</button>
       <button onClick={this.handleClick.bind(this, 2)}>T</button>
@@ -78,7 +77,6 @@ export class Week extends React.Component {
       <br/>
       <textarea rows="5" type="text" name="intro" placeholder="Intro" value={this.state.intro} onChange={this.handleEditChange.bind(this)}/>
       <br/>
-      <button onClick={this.saveWeekDetails.bind(this)}>Save Week Details</button>
     </div>;
   }
 

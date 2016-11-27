@@ -2,6 +2,7 @@
 'use babel';
 
 import React from 'react';
+const fs = require('fs');
 
 let clientId;
 let database;
