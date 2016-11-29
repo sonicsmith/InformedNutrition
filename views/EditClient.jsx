@@ -37,12 +37,14 @@ export class Week extends React.Component {
   }
 
   handleClick(weekDay) {
+    this.saveWeekInfo();
     const dayId = getDayId(weekDay, this.state.weekNumber);
     console.log("EditDay called with dayId: " + dayId)
     this.state.setParentState({currentView: 'EditDay', dayId: dayId});
   }  
 
   createPDF() {
+    this.saveWeekInfo();
     const dayId = getDayId(1, this.state.weekNumber);
     this.state.setParentState({currentView: 'WeekView', clientId: clientId, startDay: dayId});
   }
@@ -58,6 +60,8 @@ export class Week extends React.Component {
     const day = database.getCollection('clientsDays').get(dayId);
     day.date = this.state.date;
     day.intro = this.state.intro;
+    database.getCollection('clientsDays').update(day);
+    database.saveDatabase();
   }
 
   render() {

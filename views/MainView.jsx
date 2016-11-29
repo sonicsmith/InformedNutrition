@@ -7,8 +7,10 @@ import EditClient from './EditClient';
 import EditDay from './EditDay';
 import AddFood from './AddFood';
 import AddDish from './AddDish';
+import AddBaking from './AddBaking';
 import SelectFood from './SelectFood';
 import SelectDish from './SelectDish';
+import SelectBaking from './SelectBaking';
 import WeekView from './WeekView';
 import NavigationButton from './NavigationButton';
 import Loki from 'lokijs';
@@ -21,6 +23,9 @@ database.loadDatabase({}, () => {
   onDatabaseLoad();
 });
 
+// TODO: Refactor all this to just create all databases in one go
+// if the first checked database is null
+// The if debug mode, populate with demoData
 
 const onDatabaseLoad = () => {
   console.log('database loaded');
@@ -67,9 +72,23 @@ const onDatabaseLoad = () => {
     database.saveDatabase();
   }
   if (database.getCollection('dishesFoods') == null) {
-    console.log("Creating dish collection");
+    console.log("Creating dishesFoods collection");
     var meals = database.addCollection('dishesFoods', {
       indices: ['dishId']
+    });
+    database.saveDatabase();
+  }
+  if (database.getCollection('bakingBank') == null) {
+    console.log("Creating bakingBank collection");
+    var meals = database.addCollection('bakingBank', {
+      indices: ['name']
+    });
+    database.saveDatabase();
+  }
+  if (database.getCollection('mealsBaking') == null) {
+    console.log("Creating mealsBaking collection");
+    var meals = database.addCollection('mealsBaking', {
+      indices: ['mealsId']
     });
     database.saveDatabase();
     // Now add demoData
@@ -109,11 +128,17 @@ class View extends React.Component {
     if (this.state.currentView == 'AddDish') {
       return <div><AddDish state={this.state} /></div>;
     }
+    if (this.state.currentView == 'AddBaking') {
+      return <div><AddBaking state={this.state} /></div>;
+    }
     if (this.state.currentView == 'SelectFood') {
       return <div><SelectFood state={this.state} /></div>;
     }
     if (this.state.currentView == 'SelectDish') {
       return <div><SelectDish state={this.state} /></div>;
+    }
+    if (this.state.currentView == 'SelectBaking') {
+      return <div><SelectBaking state={this.state} /></div>;
     }
     if (this.state.currentView == 'WeekView') {
       return <div><WeekView state={this.state} /></div>;
@@ -150,6 +175,7 @@ export default class MainView extends React.Component {
         <NavigationButton text="Add Client" link="AddClient" setParentState={this.setParentState.bind(this)}/>
         <NavigationButton text="Add Food" link="AddFood" setParentState={this.setParentState.bind(this)}/>
         <NavigationButton text="Add Dish" link="AddDish" setParentState={this.setParentState.bind(this)}/>
+        <NavigationButton text="Add Baking" link="AddBaking" setParentState={this.setParentState.bind(this)}/>
         <hr/>
       </div>
       <div>

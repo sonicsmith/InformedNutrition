@@ -121,6 +121,16 @@ export function setDemoData(database) {
       foodId: 5,
       quantity: 2
     });
+    // Add some baking
+    const bakingCollection = database.getCollection('bakingBank');
+    bakingCollection.insert({
+      name: "Chocolate Brownies",
+      recipe: "Take some flour and Chocolate. Mix it all up. Oh and butter.",
+      calorie: 200,
+      carb: 50,
+      protein: 100,
+      fat: 50
+    });
     // Save all
     database.saveDatabase();
 }

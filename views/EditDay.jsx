@@ -23,8 +23,12 @@ export class Meal extends React.Component {
       dishName: "",
       recipe: ""
     }
-    // Get all meals from this day for this mealType
+    // Get all food for this meal
     this.state.thisMealsFood = database.getCollection('mealsFood').where(
+      (obj) => {return obj.mealId == this.state.mealId} 
+    );
+    // Get all baking for this meal
+    this.state.thisMealsBaking = database.getCollection('mealsBaking').where(
       (obj) => {return obj.mealId == this.state.mealId} 
     );
     const meal = database.getCollection('daysMeals').get(this.state.mealId);
@@ -37,16 +41,23 @@ export class Meal extends React.Component {
   }
 
   addFood() {
-    this.state.setParentState({currentView: 'SelectFood', mealId: this.state.mealId, dishId: null});
+    this.state.setParentState({currentView: 'SelectFood', mealId: this.state.mealId, dishId: null}); // SelectFood needs 2 values
   }
 
   addDish() {
     this.state.setParentState({currentView: 'SelectDish', mealId: this.state.mealId});
   }
 
+  addBaking() {
+    this.state.setParentState({currentView: 'SelectBaking', mealId: this.state.mealId});
+  }
+
   updateReactMeals() {
     // // Update React
     this.setState({thisMealsFood: database.getCollection('mealsFood').where(
+      (obj) => {return obj.mealId == this.state.mealId}
+    )});
+    this.setState({thisMealsBaking: database.getCollection('mealsBaking').where(
       (obj) => {return obj.mealId == this.state.mealId}
     )});
     this.state.countNutrients(false);
@@ -67,6 +78,23 @@ export class Meal extends React.Component {
     database.saveDatabase();
     this.updateReactMeals();
   }
+
+  removeBaking(id) {
+    console.log("Remove baking: " + id)
+    const baking = database.getCollection('mealsBaking').get(id);
+    database.getCollection('mealsBaking').remove(baking);
+    database.saveDatabase();
+    this.updateReactMeals();
+  }
+
+  handleQuantityBakingChange(id, event) {
+    const baking = database.getCollection('mealsBaking').get(id);
+    baking.quantity = event.target.value;
+    database.getCollection('mealsBaking').update(baking);
+    database.saveDatabase();
+    this.updateReactMeals();
+  }
+
 
   handleEditChange(event) {
     const editType = event.target.name;
@@ -101,6 +129,7 @@ export class Meal extends React.Component {
 
   render() {
     const thisMealsFood = this.state.thisMealsFood;
+    const thisMealsBaking = this.state.thisMealsBaking;
     return <div>
       <b>{this.state.mealName}</b><button onClick={this.removeMeal.bind(this)}>-</button><br/>
       <input type="text" name="dishName" value={this.state.dishName} onChange={this.handleEditChange.bind(this)} onBlur={this.saveMealInfo.bind(this)}/>
@@ -114,8 +143,19 @@ export class Meal extends React.Component {
           </li>;
         })}
       </ul>
+      <ul>
+        {thisMealsBaking.map((baking) => {
+          const id = baking.$loki;
+          const bakingName = database.getCollection('bakingBank').get(baking.bakingId).name;
+          return <li key={id}>
+            <input type="number" value={baking.quantity} onChange={this.handleQuantityBakingChange.bind(this, id)}/>
+             x <b>{bakingName}</b> <button onClick={this.removeBaking.bind(this, id)}>-</button>
+          </li>;
+        })}
+      </ul>
       <button onClick={this.addFood.bind(this)}>Add Food</button>
       <button onClick={this.addDish.bind(this)}>Add Dish</button>
+      <button onClick={this.addBaking.bind(this)}>Add Baking</button>
       <br/>
       <br/>
       <textarea rows="5" type="text" name="recipe" value={this.state.recipe} onChange={this.handleEditChange.bind(this)}/>
@@ -158,7 +198,6 @@ export default class EditDay extends React.Component {
 
   // Does same as in constructor, but triggers react
   countNutrients(forConstructor) {
-    console.log("Count");
     let totalNutrients = {calorie: 0, carb: 0, protein: 0, fat: 0};
     database.getCollection('daysMeals').where((meal) => {
       // If this days meal
@@ -173,7 +212,18 @@ export default class EditDay extends React.Component {
             totalNutrients.fat += nutrients.fat * food.quantity;
           }
           return true;
-        })
+        });
+        // Get baking for this meal
+        database.getCollection('mealsBaking').where((baking) => {
+          if (baking.mealId == meal.$loki) {
+            let nutrients = database.getCollection('bakingBank').get(baking.bakingId);
+            totalNutrients.calorie += nutrients.calorie * baking.quantity;
+            totalNutrients.carb += nutrients.carb * baking.quantity;
+            totalNutrients.protein += nutrients.protein * baking.quantity;
+            totalNutrients.fat += nutrients.fat * baking.quantity;
+          }
+          return true;
+        });
       }
       return true;
     });

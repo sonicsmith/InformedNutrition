@@ -6,13 +6,14 @@ import Loki from 'lokijs';
 
 let database;
 
-export default class AddFood extends React.Component {
+export default class AddBaking extends React.Component {
 
   constructor(props) {
     super();
     this.state = {
       setParentState: props.state.setParentState,
       name: "",
+      recipe: "",
       calorie: 0,
       carb: 0,
       protein: 0,
@@ -27,10 +28,11 @@ export default class AddFood extends React.Component {
   }
 
 
-  saveFood() {
-    const foodCollection = database.getCollection('foodBank');
+  saveBaking() {
+    const foodCollection = database.getCollection('bakingBank');
     foodCollection.insert({ 
       name: this.state.name,
+      recipe: this.state.recipe,
       calorie: this.state.calorie,
       carb: this.state.carb,
       protein: this.state.protein,
@@ -39,12 +41,14 @@ export default class AddFood extends React.Component {
     database.saveDatabase();
     console.log("New Food Saved", this.state.name);
     this.state.setParentState({currentView: 'SelectClient'});
-    alert("Food Saved.");
+    alert("Baking Saved.");
   }
 
   render() {
     return <div>
-      <input type="text" name="name" placeholder="Name and units" onChange={this.handleEditChange.bind(this)}/>
+      <input type="text" name="name" placeholder="Name" onChange={this.handleEditChange.bind(this)}/>
+      <br/>
+      <textarea rows="5" type="text" name="recipe" placeholder="Recipe" onChange={this.handleEditChange.bind(this)}/>
       <br/>
       <input type="number" name="calorie" placeholder="Calorie content (g)" onChange={this.handleEditChange.bind(this)}/>
       <br/>
@@ -54,7 +58,7 @@ export default class AddFood extends React.Component {
       <br/>
       <input type="number" name="fat" placeholder="Fat content (g)" onChange={this.handleEditChange.bind(this)}/>
       <br/>
-      <button onClick={this.saveFood.bind(this)}>Save</button>
+      <button onClick={this.saveBaking.bind(this)}>Save</button>
     </div>;
   }
 }
