@@ -15,6 +15,7 @@ import WeekView from './WeekView';
 import NavigationButton from './NavigationButton';
 import Loki from 'lokijs';
 
+const debugMode = true;
 const demoData = require('../scripts/demoData');
 
 let database = new Loki('app.db');
@@ -23,76 +24,23 @@ database.loadDatabase({}, () => {
   onDatabaseLoad();
 });
 
-// TODO: Refactor all this to just create all databases in one go
-// if the first checked database is null
-// The if debug mode, populate with demoData
-
 const onDatabaseLoad = () => {
   console.log('database loaded');
   if (database.getCollection('clients') == null) {
-    console.log("Creating clients collection");
-    var clients = database.addCollection('clients', {
-      indices: ['name']
-    });
-    database.saveDatabase();
-  }
-  if (database.getCollection('clientsDays') == null) {
-    console.log("Creating clientsDays collection");
-    var days = database.addCollection('clientsDays', {
-      indices: ['clientId']
-    });
-    database.saveDatabase();
-  }
-  if (database.getCollection('daysMeals') == null) {
-    console.log("Creating daysMeals collection");
-    var meals = database.addCollection('daysMeals', {
-      indices: ['clientId']
-    });
-    database.saveDatabase();
-  }
-  if (database.getCollection('mealsFood') == null) { // Also think: mealsDishes
-    console.log("Creating mealsFood collection");
-    var meals = database.addCollection('mealsFood', {
-      indices: ['mealsId']
-    });
-    database.saveDatabase();
-  }
-  if (database.getCollection('foodBank') == null) {
-    console.log("Creating foodBank collection");
-    var meals = database.addCollection('foodBank', {
-      indices: ['name']
-    });
-    database.saveDatabase();
-  }
-  if (database.getCollection('dishBank') == null) {
-    console.log("Creating dishBank collection");
-    var meals = database.addCollection('dishBank', {
-      indices: ['name']
-    });
-    database.saveDatabase();
-  }
-  if (database.getCollection('dishesFoods') == null) {
-    console.log("Creating dishesFoods collection");
-    var meals = database.addCollection('dishesFoods', {
-      indices: ['dishId']
-    });
-    database.saveDatabase();
-  }
-  if (database.getCollection('bakingBank') == null) {
-    console.log("Creating bakingBank collection");
-    var meals = database.addCollection('bakingBank', {
-      indices: ['name']
-    });
-    database.saveDatabase();
-  }
-  if (database.getCollection('mealsBaking') == null) {
-    console.log("Creating mealsBaking collection");
-    var meals = database.addCollection('mealsBaking', {
-      indices: ['mealsId']
-    });
-    database.saveDatabase();
+    console.log("No collections found. Creating database collections");
+    var clients = database.addCollection('clients', {indices: ['name']});
+    var days = database.addCollection('clientsDays', {indices: ['clientId']});
+    var meals = database.addCollection('daysMeals', {indices: ['clientId']});
+    var meals = database.addCollection('mealsFood', {indices: ['mealsId']});
+    var meals = database.addCollection('foodBank', {indices: ['name']});
+    var meals = database.addCollection('dishBank', {indices: ['name']});
+    var meals = database.addCollection('dishesFoods', {indices: ['dishId']});
+    var meals = database.addCollection('bakingBank', {indices: ['name']});
+    var meals = database.addCollection('mealsBaking', {indices: ['mealsId']});
     // Now add demoData
-    demoData.setDemoData(database);
+    if (debugMode) {
+      demoData.setDemoData(database);
+    }
   }
 }
 
