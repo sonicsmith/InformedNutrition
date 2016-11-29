@@ -23,7 +23,8 @@ export default class SelectFood extends React.Component {
     this.state = {
       setParentState: props.state.setParentState,
       foodList: [{name:"loading"}],
-      quantity: 1
+      quantity: 1,
+      searchFilter: ""
     };
     this.handleSearchChange = this.handleSearchChange.bind(this);
     mealId = props.state.mealId;
@@ -75,8 +76,18 @@ export default class SelectFood extends React.Component {
     this.state.setParentState({currentView: previousScreen});
   }
 
-  handleSearchChange() {
-    //this.setState(this.state)
+  handleSearchChange(event) {
+    const filter = event.target.value;
+    this.setState({searchFilter: filter});
+    if (filter == "") {
+      const allFoods = database.getCollection('foodBank').where((obj) => {return true;});
+      this.setState({foodList: allFoods});
+    } else {
+      const filteredFoods = database.getCollection('foodBank').where((obj) => {
+        return obj.name.toLowerCase().includes(filter.toLowerCase());
+      });
+      this.setState({foodList: filteredFoods});
+    }
   }
 
 
