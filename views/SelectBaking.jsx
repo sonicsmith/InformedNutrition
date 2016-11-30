@@ -53,14 +53,23 @@ export default class SelectBaking extends React.Component {
     this.setState({quantity: event.target.value});
   }
 
-  handleSearchChange() {
-    //this.setState(this.state)
+  handleSearchChange(event) {
+    const filter = event.target.value;
+    if (filter == "") {
+      const allBaking = database.getCollection('bakingBank').where((obj) => {return true;});
+      this.setState({bakingList: allBaking});
+    } else {
+      const filteredBaking = database.getCollection('bakingBank').where((obj) => {
+        return obj.name.toLowerCase().includes(filter.toLowerCase());
+      });
+      this.setState({bakingList: filteredBaking});
+    }
   }
 
   render() {
     const list = this.state.bakingList;
     return <div>
-      <input type="text" placeholder="Search" onChange={this.handleSearchChange}/>
+      <input type="text" placeholder="Search" onChange={this.handleSearchChange.bind(this)}/>
       <ul>
         {list.map((baking) => {
           const id = baking.$loki;

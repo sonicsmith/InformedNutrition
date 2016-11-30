@@ -10,8 +10,7 @@ export default class SelectClient extends React.Component {
     this.state = {
       setParentState: props.state.setParentState,
       clientList: [{name:"loading"}],
-      database: props.state.database,
-      searchFilter: ""
+      database: props.state.database
     };
     this.state.clientList = this.state.database.getCollection('clients').where((obj) => {return true;});
   }
@@ -23,7 +22,6 @@ export default class SelectClient extends React.Component {
 
   handleSearchChange(event) {
     const filter = event.target.value;
-    this.setState({searchFilter: filter});
     if (filter == "") {
       const allClients = this.state.database.getCollection('clients').where((obj) => {return true;});
       this.setState({clientList: allClients});
@@ -38,7 +36,7 @@ export default class SelectClient extends React.Component {
   render() {
     const list = this.state.clientList;
     return <div>
-      <input type="text" placeholder="Search" value={this.state.searchFilter} onChange={this.handleSearchChange.bind(this)}/>
+      <input type="text" placeholder="Search" onChange={this.handleSearchChange.bind(this)}/>
       <ul>
           {list.map((client) => {
             const id = client.$loki;

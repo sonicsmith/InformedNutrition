@@ -23,22 +23,24 @@ export default class SelectDish extends React.Component {
   }
 
   // Add Dish
-  addDish(id) {
-    // TODO: If duplicate then return and alert user
-    
+  addDish(id) {    
     // Get all the food from dish
-    const dishesFoods = database.getCollection('dishesFoods').where((obj) => { return obj.dishId == id; });
+    let numFood = 0;
+    const dishesFoods = database.getCollection('dishesFoods').where((obj) => {
+      const dishMatch = obj.dishId == id;
+      if (dishMatch) {
+        numFood++;
+      }
+      return dishMatch;
+    });
     // save to the meal
-    console.log(dishesFoods);
-    let index = 0;
-    while (dishesFoods[index] != undefined) {
+    for (let index = numFood - 1; index >= 0; index--) {
       const food = dishesFoods[index];
       database.getCollection('mealsFood').insert({
         mealId: mealId,
         foodId: food.foodId,
         quantity: food.quantity
       });
-      index++; 
     }
     // name and recipe
     const dish = database.getCollection('dishBank').get(id);
@@ -50,14 +52,23 @@ export default class SelectDish extends React.Component {
     this.state.setParentState({currentView: 'EditDay'});
   }
 
-  handleSearchChange() {
-    //this.setState(this.state)
+  handleSearchChange(event) {
+    const filter = event.target.value;
+    if (filter == "") {
+      const allDishes = database.getCollection('dishBank').where((obj) => {return true;});
+      this.setState({dishList: allDishes});
+    } else {
+      const filteredDishes = database.getCollection('dishBank').where((obj) => {
+        return obj.dishName.toLowerCase().includes(filter.toLowerCase());
+      });
+      this.setState({dishList: filteredDishes});
+    }
   }
 
   render() {
     const list = this.state.dishList;
     return <div>
-      <input type="text" placeholder="Search" onChange={this.handleSearchChange}/>
+      <input type="text" placeholder="Search" onChange={this.handleSearchChange.bind(this)}/>
       <ul>
           {list.map((dish) => {
             const id = dish.$loki;

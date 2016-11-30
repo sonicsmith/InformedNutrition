@@ -23,8 +23,7 @@ export default class SelectFood extends React.Component {
     this.state = {
       setParentState: props.state.setParentState,
       foodList: [{name:"loading"}],
-      quantity: 1,
-      searchFilter: ""
+      quantity: 1
     };
     this.handleSearchChange = this.handleSearchChange.bind(this);
     mealId = props.state.mealId;
@@ -78,7 +77,6 @@ export default class SelectFood extends React.Component {
 
   handleSearchChange(event) {
     const filter = event.target.value;
-    this.setState({searchFilter: filter});
     if (filter == "") {
       const allFoods = database.getCollection('foodBank').where((obj) => {return true;});
       this.setState({foodList: allFoods});
