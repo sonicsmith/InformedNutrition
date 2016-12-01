@@ -6,9 +6,21 @@ const fs = require('fs');
 
 let clientId;
 let database;
+let bakingList = [];
 
 
 
+const addToBaking = (newBaking) => {
+  let existsAlready = false;
+  for (let i = 0; i < bakingList.length; i++) {
+    if (bakingList[i] == newBaking) {
+      existsAlready = true;
+    }
+  }
+  if (!existsAlready) {
+    bakingList[bakingList.length] = newBaking;
+  }
+}
 
 export class FoodView extends React.Component {
 
@@ -41,6 +53,16 @@ export class MealView extends React.Component {
     this.state = {
       meal: database.getCollection('daysMeals').get(props.mealId)
     }
+    // If baking exists, we'll bypass the dishName name and put the baking in
+    let baking = database.getCollection('mealsBaking').where((obj) => {
+      return obj.mealId == props.mealId;
+    });
+    if (baking[0] != undefined) {
+      addToBaking(baking[0].bakingId)
+      const bakingName = database.getCollection('bakingBank').get(baking[0].bakingId).name;
+      const quantity = baking[0].quantity;
+      this.state.meal.dishName = quantity + ' ' + bakingName;
+    } 
   }
 
   render() {
@@ -71,7 +93,7 @@ export class DayView extends React.Component {
   }
 
   render() {
-    return <div>
+    return <div style={style.main}>
       <h3><u>{this.state.dayName}</u></h3>
       {this.state.thisDaysMeals.map((meal) => {
         return <MealView mealId={meal.$loki} key={meal.$loki}/>
@@ -81,6 +103,29 @@ export class DayView extends React.Component {
 
 }
 
+export class Recipes extends React.Component {
+
+  constructor(props) {
+    super();
+  }
+
+  render() {
+    return <div style={style.recipes}>
+      <b><u>Recipes:</u></b>
+      <br/>
+      <br/>
+      {bakingList.map((bakingId) => {
+        const baking = database.getCollection('bakingBank').get(bakingId);
+        return <div key={baking.$loki}>
+          <b>{baking.name}</b>
+          <br/>
+          {baking.recipe}
+          <br/>
+        </div>
+      })}
+    </div>
+  }
+}
 
 
 export default class WeekView extends React.Component {
@@ -124,9 +169,9 @@ export default class WeekView extends React.Component {
   render() {
     const client = database.getCollection('clients').get(clientId);
       return <div>
+        <img src="./INlogo.jpg" style={style.logo}/>
         <div style={style.title}><u>Meal Plan for {client.name}</u> {this.state.date}</div>
         <br/>
-        <img src="./INlogo.jpg" style={style.logo}/>
         <div style={style.intro}>
         {this.state.intro}
         </div>
@@ -139,9 +184,11 @@ export default class WeekView extends React.Component {
         <DayView dayId={this.state.startDay + 4} dayName="Friday"/>
         <DayView dayId={this.state.startDay + 5} dayName="Saturday"/>
         <DayView dayId={this.state.startDay + 6} dayName="Sunday"/>
+        <br/>
+        <br/>
+        <Recipes/>
       </div>
   }
-
 }
 
 const style = {};
@@ -150,10 +197,17 @@ style.title = {
   fontSize: 30
 }
 style.logo = {
-  width: 250,
-  height: 250,
-  align: 'right'
+  width: 250, 
+  height: 250, 
+  position: 'absolute', 
+  right: 0
 }
 style.intro = {
+  fontSize: 20
+}
+style.main = {
+  fontSize: 20
+}
+style.recipes = {
   fontSize: 20
 }
