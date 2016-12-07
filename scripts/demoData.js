@@ -24,35 +24,35 @@ export function setDemoData(database) {
       name: "Maria Brett",
       cell: "02112345678",
       email: "nicsmith@gmail.com",
-      intolerances: "Diary",
+      intolerances: "Dairy",
       likesDislikes: "Hates nuts",
       medications: "",
     });
     // Add some foods
     const foodCollection = database.getCollection('foodBank');
     foodCollection.insert({ 
-      name: "egg",
+      name: "egg{s}",
       calorie: 70,
       carb: 8,
       protein: 1,
       fat: 0.2
     });
     foodCollection.insert({ 
-      name: "rice cake",
+      name: "rice cake{s}",
       calorie: 20,
       carb: 18,
       protein: 1,
       fat: 1
     });
     foodCollection.insert({ 
-      name: "medium banana",
+      name: "medium banana{s}",
       calorie: 20,
       carb: 18,
       protein: 1,
       fat: 1
     });
     foodCollection.insert({ 
-      name: "grams of tofu",
+      name: "gram{s} of tofu",
       calorie: 10,
       carb: 5,
       protein: 5,
@@ -66,35 +66,35 @@ export function setDemoData(database) {
       fat: 10
     });
     foodCollection.insert({ 
-      name: "cup brown rice",
+      name: "cup{s} brown rice",
       calorie: 50,
       carb: 50,
       protein: 5,
       fat: 1
     });
     foodCollection.insert({ 
-      name: "grams of cheese",
+      name: "gram{s} of cheese",
       calorie: 20,
       carb: 5,
       protein: 10,
       fat: 5
     });
     foodCollection.insert({ 
-      name: "grams of chicken",
+      name: "gram{s} of chicken",
       calorie: 20,
       carb: 5,
       protein: 10,
       fat: 5
     });
     foodCollection.insert({ 
-      name: "salt and pepper",
+      name: "tsp salt and pepper",
       calorie: 0,
       carb: 0,
       protein: 0,
       fat: 0
     });
     foodCollection.insert({ 
-      name: "can of chickpeas (drained)",
+      name: "can{s} of chickpeas (drained)",
       calorie: 20,
       carb: 5,
       protein: 10,
@@ -124,7 +124,7 @@ export function setDemoData(database) {
     // Add some baking
     const bakingCollection = database.getCollection('bakingBank');
     bakingCollection.insert({
-      name: "Chocolate Brownies",
+      name: "Chocolate Brownie{s}",
       recipe: "Take some flour and Chocolate. Mix it all up. Oh and butter.",
       calorie: 200,
       carb: 50,

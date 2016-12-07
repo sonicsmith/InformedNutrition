@@ -37,12 +37,16 @@ const onDatabaseLoad = () => {
     var meals = database.addCollection('dishesFoods', {indices: ['dishId']});
     var meals = database.addCollection('bakingBank', {indices: ['name']});
     var meals = database.addCollection('mealsBaking', {indices: ['mealsId']});
-    // Now add demoData
-    if (debugMode) {
-      demoData.setDemoData(database);
-    }
   }
 }
+
+const addDemoData = () => {
+  // Now add demoData
+  if (debugMode) {
+    demoData.setDemoData(database);
+  }
+}
+
 
 class View extends React.Component {
 
@@ -124,6 +128,7 @@ export default class MainView extends React.Component {
         <NavigationButton text="Add Food" link="AddFood" setParentState={this.setParentState.bind(this)}/>
         <NavigationButton text="Add Dish" link="AddDish" setParentState={this.setParentState.bind(this)}/>
         <NavigationButton text="Add Baking" link="AddBaking" setParentState={this.setParentState.bind(this)}/>
+        <button onClick={addDemoData}>Add Demo Data</button>
         <hr/>
       </div>
       <div>

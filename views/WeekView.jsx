@@ -10,6 +10,19 @@ let bakingList = [];
 
 
 
+const pluralise = (amount, string) => {
+  if (string.toLowerCase().includes('{s}')) {
+    if (amount > 1) {
+      string = string.replace('{s}', 's');
+      string = string.replace('{S}', 'S');
+    } else {
+      string = string.replace('{s}', '');
+      string = string.replace('{S}', '');
+    }
+  }
+  return string;
+}
+
 const addToBaking = (newBaking) => {
   let existsAlready = false;
   for (let i = 0; i < bakingList.length; i++) {
@@ -36,8 +49,9 @@ export class FoodView extends React.Component {
     return <div>
       {this.state.food.map((food) => {
         const foodDescription = database.getCollection('foodBank').get(food.foodId);
+        const foodName = pluralise(food.quantity, foodDescription.name);
         return <div key={food.$loki}>
-          {food.quantity} {foodDescription.name}
+          {food.quantity} {foodName}
         </div>
       })}
     </div>
@@ -111,7 +125,7 @@ export class Recipes extends React.Component {
 
   render() {
     return <div style={style.recipes}>
-      <b><u>Recipes:</u></b>
+      {(bakingList.length == 0 ? <br/> : <b><u>Recipes:</u></b>)}
       <br/>
       <br/>
       {bakingList.map((bakingId) => {
