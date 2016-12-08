@@ -31,7 +31,8 @@ const addToBaking = (newBaking) => {
     }
   }
   if (!existsAlready) {
-    bakingList[bakingList.length] = newBaking;
+    const length = bakingList.length; 
+    bakingList[length] = newBaking;
   }
 }
 
@@ -87,6 +88,7 @@ export class MealView extends React.Component {
       <br/>
       {this.state.meal.recipe}
       <br/>
+      <br/>
     </div>
   }
 
@@ -99,11 +101,23 @@ export class DayView extends React.Component {
     super();
     this.state = {
       dayId: props.dayId,
-      dayName: props.dayName
+      dayName: props.dayName,
+      thisDaysMeals: []
     }
-    this.state.thisDaysMeals = database.getCollection('daysMeals').where((obj) => {
-      return obj.dayId == this.state.dayId;
+    let numMeals = 0;
+    const mealsBackwards = database.getCollection('daysMeals').where((obj) => {
+      const match = obj.dayId == this.state.dayId;
+      if (match) {
+        numMeals++;
+      }
+      return match;
     });
+    console.log(mealsBackwards);
+    console.log('Number of Meals: '+numMeals)
+    for (let i = 0; i < numMeals; i++) {
+      this.state.thisDaysMeals[i] = mealsBackwards[numMeals - i - 1];
+    }
+    console.log(this.state.thisDaysMeals);
   }
 
   render() {
@@ -130,10 +144,12 @@ export class Recipes extends React.Component {
       <br/>
       {bakingList.map((bakingId) => {
         const baking = database.getCollection('bakingBank').get(bakingId);
+        const singularName = pluralise(2, baking.name);
         return <div key={baking.$loki}>
-          <b>{baking.name}</b>
+          <b>{singularName}</b>
           <br/>
           {baking.recipe}
+          <br/>
           <br/>
         </div>
       })}
