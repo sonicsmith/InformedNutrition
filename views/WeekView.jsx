@@ -76,7 +76,7 @@ export class MealView extends React.Component {
       addToBaking(baking[0].bakingId)
       const bakingName = database.getCollection('bakingBank').get(baking[0].bakingId).name;
       const quantity = baking[0].quantity;
-      this.state.meal.dishName = quantity + ' ' + bakingName;
+      this.state.meal.dishName = quantity + ' ' + pluralise(quantity, bakingName);
     } 
   }
 
@@ -86,9 +86,7 @@ export class MealView extends React.Component {
       <br/>
       <FoodView mealId={this.state.meal.$loki}/>
       <br/>
-      {this.state.meal.recipe}
-      <br/>
-      <br/>
+      {(this.state.meal.recipe == '' ? <div></div> : <div>{this.state.meal.recipe}<br/><br/><br/></div>)}
     </div>
   }
 
@@ -112,12 +110,9 @@ export class DayView extends React.Component {
       }
       return match;
     });
-    console.log(mealsBackwards);
-    console.log('Number of Meals: '+numMeals)
     for (let i = 0; i < numMeals; i++) {
       this.state.thisDaysMeals[i] = mealsBackwards[numMeals - i - 1];
     }
-    console.log(this.state.thisDaysMeals);
   }
 
   render() {
@@ -177,6 +172,7 @@ export default class WeekView extends React.Component {
     if (day.intro) {
       this.state.intro = day.intro;
     }
+    alert('sdg');
   }
 
   createPDF() {

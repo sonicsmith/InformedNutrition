@@ -1,10 +1,11 @@
 {
-  "name": "InformedNutrition",
+  "name": "informed-nutrition",
   "version": "0.0.2",
   "main": "bootstrapper.js",
   "scripts": {
     "start": "electron .",
-    "package": "electron-packager . InFormedNutrition --platform=win32"
+    "package": "electron-packager . InFormedNutrition --platform=darwin",
+    "packageInstaller": "electron-installer-dmg ./InFormedNutrition-darwin-x64/InFormedNutrition.app InFormedNutrition"
   },
   "repository": {
     "type": "git",
@@ -23,6 +24,7 @@
     "react-dom": "^15.4.1"
   },
   "devDependencies": {
+    "electron-installer-dmg": "^0.1.2",
     "electron-packager": "^8.3.0",
     "electron-prebuilt": "^0.36.0"
   }

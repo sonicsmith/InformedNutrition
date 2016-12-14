@@ -121,6 +121,8 @@ export default class MainView extends React.Component {
 
   render() {
     return <div>
+      {(this.state.currentView === 'WeekView' ? <div></div> : <div>
+
       <h1>InFormed Nutrition</h1>
       <div className="nav-buttons">
         <NavigationButton text="Select Client" link="SelectClient" setParentState={this.setParentState.bind(this)}/>
@@ -131,6 +133,8 @@ export default class MainView extends React.Component {
         <button onClick={addDemoData}>Add Demo Data</button>
         <hr/>
       </div>
+      
+      </div>)}
       <div>
         <View state={this.state} setParentState={this.setParentState.bind(this)}/>
       </div>

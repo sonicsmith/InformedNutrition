@@ -100,6 +100,20 @@ export function setDemoData(database) {
       protein: 10,
       fat: 5
     });
+    foodCollection.insert({ 
+      name: "gram{s} of beef (uncooked)",
+      calorie: 20,
+      carb: 5,
+      protein: 10,
+      fat: 5
+    });
+    foodCollection.insert({ 
+      name: "burger bun{s}",
+      calorie: 20,
+      carb: 5,
+      protein: 10,
+      fat: 5
+    });
     // Add some Dishes
     const dishCollection = database.getCollection('dishBank');
     dishCollection.insert({
@@ -113,12 +127,22 @@ export function setDemoData(database) {
     const dishesFoodsCollection = database.getCollection('dishesFoods');
     dishesFoodsCollection.insert({
       dishId: 1,
-      foodId: 4,
-      quantity: 3
+      foodId: 8,
+      quantity: 300
+    });
+    dishesFoodsCollection.insert({
+      dishId: 1,
+      foodId: 9,
+      quantity: 1
     });
     dishesFoodsCollection.insert({
       dishId: 2,
-      foodId: 5,
+      foodId: 11,
+      quantity: 200
+    });
+    dishesFoodsCollection.insert({
+      dishId: 2,
+      foodId: 12,
       quantity: 2
     });
     // Add some baking

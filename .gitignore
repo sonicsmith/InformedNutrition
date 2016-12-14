@@ -1,3 +1,5 @@
 node_modules
 *.db
 InFormedNutrition-win32-x64/
+InFormedNutrition-darwin-x64/
+npm-debug.log
