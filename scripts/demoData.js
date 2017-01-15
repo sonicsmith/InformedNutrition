@@ -9,7 +9,8 @@ export function setDemoData(database) {
       cell: "02712355678",
       email: "nicsmith@gmail.com",
       intolerances: "Gluten",
-      likesDislikes: "Hates bananas",
+      likes: "bananas",
+      dislikes: "steak",
       medications: "Iron",
     });
     clientCollection.insert({ 
@@ -17,7 +18,8 @@ export function setDemoData(database) {
       cell: "0254363645",
       email: "erinhoskins@gmail.com",
       intolerances: "",
-      likesDislikes: "Loves steak",
+      likes: "bananas",
+      dislikes: "tea",
       medications: "Vitamin C",
     });
     clientCollection.insert({ 
@@ -25,7 +27,8 @@ export function setDemoData(database) {
       cell: "02112345678",
       email: "nicsmith@gmail.com",
       intolerances: "Dairy",
-      likesDislikes: "Hates nuts",
+      likes: "bread",
+      dislikes: "berries",
       medications: "",
     });
     // Add some foods

@@ -16,7 +16,8 @@ export default class AddClient extends React.Component {
       cell: "",
       email: "",
       intolerances: "",
-      likesDislikes: "",
+      likes: "",
+      dislikes: "",
       medications: ""
     };
     database = props.state.database;
@@ -33,7 +34,8 @@ export default class AddClient extends React.Component {
       cell: this.state.cell,
       email: this.state.email,
       intolerances: this.state.intolerances,
-      likesDislikes: this.state.likesDislikes,
+      likes: this.state.likes,
+      dislikes: this.state.dislikes,
       medications: this.state.medications,
     });
     database.saveDatabase();
@@ -52,7 +54,9 @@ export default class AddClient extends React.Component {
       <br/>
       <input type="text" name="intolerances" placeholder="Intolerances" onChange={this.handleEditChange.bind(this)}/>
       <br/>
-      <input type="text" name="likesDislikes" placeholder="Likes and Dislikes" onChange={this.handleEditChange.bind(this)}/>
+      <input type="text" name="likes" placeholder="Likes" onChange={this.handleEditChange.bind(this)}/>
+      <br/>
+      <input type="text" name="dislikes" placeholder="Dislikes" onChange={this.handleEditChange.bind(this)}/>
       <br/>
       <input type="text" name="medications" placeholder="Medications and Supplements" onChange={this.handleEditChange.bind(this)}/>
       <br/>
