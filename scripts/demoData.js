@@ -148,7 +148,8 @@ export function setDemoData(database) {
     // Add some baking
     const bakingCollection = database.getCollection('bakingBank');
     bakingCollection.insert({
-      name: "Chocolate Brownie{s}",
+      name: "Chocolate Brownie",
+      unitName: "piece{s} of chocolate brownie.",
       recipe: "Take some flour and Chocolate. Mix it all up. Oh and butter.",
       calorie: 200,
       carb: 50,

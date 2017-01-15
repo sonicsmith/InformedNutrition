@@ -74,7 +74,7 @@ export class MealView extends React.Component {
     });
     if (baking[0] != undefined) {
       addToBaking(baking[0].bakingId)
-      const bakingName = database.getCollection('bakingBank').get(baking[0].bakingId).name;
+      const bakingName = database.getCollection('bakingBank').get(baking[0].bakingId).unitName; // Note: UnitName, eg "pieces of cake"
       const quantity = baking[0].quantity;
       this.state.meal.dishName = quantity + ' ' + pluralise(quantity, bakingName);
     } 

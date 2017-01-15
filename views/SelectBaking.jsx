@@ -76,7 +76,7 @@ export default class SelectBaking extends React.Component {
           const quantityFoodName = baking.name + 'quantity';
           return <li key={id}>
             <input type="number" name={quantityFoodName} onChange={this.handleQuantityChange.bind(this)}/>
-            {baking.name} <button onClick={this.addBaking.bind(this, id)}>+</button>
+            {baking.unitName} <button onClick={this.addBaking.bind(this, id)}>+</button>
           </li>;
         })}
       </ul>
