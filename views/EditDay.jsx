@@ -261,7 +261,8 @@ export default class EditDay extends React.Component {
     return <div>
       <h1>{this.state.client.name}</h1>
       <b>Intolerances:</b> {this.state.client.intolerances}<br/>
-      <b>Likes and Dislikes:</b> {this.state.client.likesDislikes}<br/>
+      <b>Likes:</b> {this.state.client.likes}<br/>
+      <b>Dislikes:</b> {this.state.client.dislikes}<br/>
       <b>Medications and Supplements:</b> {this.state.client.medications}<br/>
       <h3>Week:{weekNumber}, Day:{dayNumber}</h3>
       <b>Nutrition Totals: </b>
