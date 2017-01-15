@@ -250,6 +250,13 @@ export default class EditDay extends React.Component {
     this.setState({newMealName: event.target.value});
   }
 
+  changeDay(weekDay) {
+    const dayDifference = weekDay - dayNumber;
+    dayId = dayId + dayDifference;
+    dayNumber = weekDay;
+    this.state.setParentState({currentView: 'EditDay', dayId: dayId});
+  } 
+
   render() {
     // this.state.thisDaysMeals not in use since we do this below
     const meals = database.getCollection('daysMeals').where((obj) => { 
@@ -264,6 +271,13 @@ export default class EditDay extends React.Component {
       <b>Likes:</b> {this.state.client.likes}<br/>
       <b>Dislikes:</b> {this.state.client.dislikes}<br/>
       <b>Medications and Supplements:</b> {this.state.client.medications}<br/>
+      <button onClick={this.changeDay.bind(this, 1)}>M</button>
+      <button onClick={this.changeDay.bind(this, 2)}>T</button>
+      <button onClick={this.changeDay.bind(this, 3)}>W</button>
+      <button onClick={this.changeDay.bind(this, 4)}>T</button>
+      <button onClick={this.changeDay.bind(this, 5)}>F</button>
+      <button onClick={this.changeDay.bind(this, 6)}>S</button>
+      <button onClick={this.changeDay.bind(this, 7)}>S</button>
       <h3>Week:{weekNumber}, Day:{dayNumber}</h3>
       <b>Nutrition Totals: </b>
       Calorie: {this.state.totalNutrients.calorie}, Carb: {this.state.totalNutrients.carb}, 
