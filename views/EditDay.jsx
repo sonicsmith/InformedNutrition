@@ -151,9 +151,6 @@ export class Meal extends React.Component {
       });
       const meal1 = database.getCollection('daysMeals').get(this.state.mealId);
       const meal2 = database.getCollection('daysMeals').get(oldPlaceMeal[0].$loki);
-      // meal1.order = newOrder;
-      // meal2.order = oldOrder;
-      // database.saveDatabase();
       this.state.swapMeals(meal1, meal2)
     }
   }
@@ -163,8 +160,8 @@ export class Meal extends React.Component {
     const thisMealsFood = this.state.thisMealsFood;
     const thisMealsBaking = this.state.thisMealsBaking;
     return <div>
-      <button onClick={this.changeOrder.bind(this, -1)}>UP</button><button onClick={this.changeOrder.bind(this, 1)}>DOWN</button>
-      <b>{this.state.mealName}</b>{this.state.order}<button onClick={this.removeMeal.bind(this)}>-</button><br/>
+      <button onClick={this.changeOrder.bind(this, -1)}>↑</button><button onClick={this.changeOrder.bind(this, 1)}>↓</button>
+      <b>{this.state.mealName}</b><button onClick={this.removeMeal.bind(this)}>-</button><br/>
       <input type="text" name="dishName" value={this.state.dishName} onChange={this.handleEditChange.bind(this)} onBlur={this.saveMealInfo.bind(this)}/>
       <ul>
         {thisMealsFood.map((food) => {
