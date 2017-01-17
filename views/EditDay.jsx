@@ -9,6 +9,17 @@ let dayId;
 let weekNumber;
 let dayNumber;
 
+
+const getTotalMeals = () => {
+    let totalMeals = 0;
+    const meals = database.getCollection('daysMeals').where((obj) => {
+      totalMeals++;
+      return obj.dayId == dayId;
+    });
+    return totalMeals;
+}
+
+
 // TODO: Mechanism for blocking foods and dishes
 
 export class Meal extends React.Component {
@@ -20,8 +31,10 @@ export class Meal extends React.Component {
       mealName: props.mealName,
       setParentState: props.setParentState,
       countNutrients: props.countNutrients,
+      swapMeals: props.swapMeals,
       dishName: "",
-      recipe: ""
+      recipe: "",
+      order: 0
     }
     // Get all food for this meal
     this.state.thisMealsFood = database.getCollection('mealsFood').where(
@@ -38,6 +51,7 @@ export class Meal extends React.Component {
     if (meal.recipe != undefined) {
       this.state.recipe = meal.recipe;
     }
+    this.state.order = meal.order;
   }
 
   addFood() {
@@ -127,11 +141,30 @@ export class Meal extends React.Component {
     this.updateReactMeals();
   }
 
+  changeOrder(direction) {
+    const newOrder = this.state.order + direction;
+    const oldOrder = this.state.order;
+    const totalMeals = getTotalMeals();
+    if (newOrder >= 0 && newOrder < totalMeals) {
+      const oldPlaceMeal = database.getCollection('daysMeals').where((obj) => {
+        return obj.order == newOrder;
+      });
+      const meal1 = database.getCollection('daysMeals').get(this.state.mealId);
+      const meal2 = database.getCollection('daysMeals').get(oldPlaceMeal[0].$loki);
+      // meal1.order = newOrder;
+      // meal2.order = oldOrder;
+      // database.saveDatabase();
+      this.state.swapMeals(meal1, meal2)
+    }
+  }
+
+
   render() {
     const thisMealsFood = this.state.thisMealsFood;
     const thisMealsBaking = this.state.thisMealsBaking;
     return <div>
-      <b>{this.state.mealName}</b><button onClick={this.removeMeal.bind(this)}>-</button><br/>
+      <button onClick={this.changeOrder.bind(this, -1)}>UP</button><button onClick={this.changeOrder.bind(this, 1)}>DOWN</button>
+      <b>{this.state.mealName}</b>{this.state.order}<button onClick={this.removeMeal.bind(this)}>-</button><br/>
       <input type="text" name="dishName" value={this.state.dishName} onChange={this.handleEditChange.bind(this)} onBlur={this.saveMealInfo.bind(this)}/>
       <ul>
         {thisMealsFood.map((food) => {
@@ -235,10 +268,12 @@ export default class EditDay extends React.Component {
   }
 
   newDaysMeal() {
-    console.log("Add new meal: " + this.state.newMealName)
+    console.log("Add new meal: " + this.state.newMealName);
+    const totalMeals = getTotalMeals();
     database.getCollection('daysMeals').insert({
       dayId: dayId, 
-      name: this.state.newMealName
+      name: this.state.newMealName,
+      order: totalMeals
     });
     database.saveDatabase();
     this.setState({thisDaysMeals: database.getCollection('daysMeals').where((obj) => { 
@@ -250,12 +285,33 @@ export default class EditDay extends React.Component {
     this.setState({newMealName: event.target.value});
   }
 
+  refreshDay() {
+    this.state.setParentState({currentView: 'refresh'});
+    setTimeout(()=> {
+      this.state.setParentState({currentView: 'EditDay', dayId: dayId});
+    }, 1);
+  }
+
   changeDay(weekDay) {
     const dayDifference = weekDay - dayNumber;
     dayId = dayId + dayDifference;
-    dayNumber = weekDay;
-    this.state.setParentState({currentView: 'EditDay', dayId: dayId});
-  } 
+    this.refreshDay();
+  }
+
+  swapMeals(meal1, meal2) {
+      const meal1Order = meal1.order;
+      const meal2Order = meal2.order;
+      meal1.order = meal2Order;
+      meal2.order = meal1Order;
+      database.getCollection('daysMeals').update(meal1);
+      database.saveDatabase();
+      database.getCollection('daysMeals').update(meal2);
+      database.saveDatabase();
+      const meals = database.getCollection('daysMeals').where((obj) => { 
+        return obj.dayId == dayId;
+      });
+      this.refreshDay();
+  }
 
   render() {
     // this.state.thisDaysMeals not in use since we do this below
@@ -263,9 +319,10 @@ export default class EditDay extends React.Component {
       return obj.dayId == dayId;
     });
     meals.sort((a, b) => {
-      return a.$loki - b.$loki;
-    })
+      return a.order - b.order;
+    });
     return <div>
+      {this.state.bullshit}
       <h1>{this.state.client.name}</h1>
       <b>Intolerances:</b> {this.state.client.intolerances}<br/>
       <b>Likes:</b> {this.state.client.likes}<br/>
@@ -288,7 +345,7 @@ export default class EditDay extends React.Component {
         {meals.map((meal) => {
           const id = meal.$loki;
           return <li key={id}>
-            <Meal mealId={id} mealName={meal.name} setParentState={this.state.setParentState} countNutrients={this.countNutrients.bind(this)}/>
+            <Meal mealId={id} mealName={meal.name} setParentState={this.state.setParentState} countNutrients={this.countNutrients.bind(this)} swapMeals={this.swapMeals.bind(this)} />
           </li>;
         })}
       </ul>
