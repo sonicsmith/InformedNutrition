@@ -166,10 +166,16 @@ export class Meal extends React.Component {
       <ul>
         {thisMealsFood.map((food) => {
           const id = food.$loki;
-          const foodName = database.getCollection('foodBank').get(food.foodId).name;
+          const foodItem = database.getCollection('foodBank').get(food.foodId);
+          const foodName = foodItem.name;
+          const cal = foodItem.calorie * food.quantity;
+          const carb = foodItem.carb * food.quantity;
+          const fat = foodItem.fat * food.quantity;
+          const protein = foodItem.protein * food.quantity;
+          const foodNutrientValues = " → Cal: " + cal + ", Carb: " + carb + ", Fat: " + fat + ", Pro: " + protein;
           return <li key={id}>
             <input type="number" value={food.quantity} onChange={this.handleQuantityChange.bind(this, id)}/>
-             x {foodName} <button onClick={this.removeFood.bind(this, id)}>-</button>
+             x {foodName} <button onClick={this.removeFood.bind(this, id)}>-</button>{foodNutrientValues}
           </li>;
         })}
       </ul>
