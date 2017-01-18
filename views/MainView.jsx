@@ -2,9 +2,10 @@
 
 import React from 'react';
 import AddClient from './AddClient';
-import SelectClient from './SelectClient';
 import EditClient from './EditClient';
-import EditDay from './EditDay';
+import SelectClient from './SelectClient';
+import ClientView from './ClientView';
+import DayView from './DayView';
 import AddFood from './AddFood';
 import AddDish from './AddDish';
 import AddBaking from './AddBaking';
@@ -65,14 +66,14 @@ class View extends React.Component {
     if (this.state.currentView == 'SelectClient') {
       return <div><SelectClient state={this.state} /></div>;
     }
-    if (this.state.currentView == 'EditClient') {
-      return <div><EditClient state={this.state} /></div>;
+    if (this.state.currentView == 'ClientView') {
+      return <div><ClientView state={this.state} /></div>;
     }
     if (this.state.currentView == 'AddClient') {
       return <div><AddClient state={this.state} /></div>;
     }
-    if (this.state.currentView == 'EditDay') {
-      return <div><EditDay state={this.state} /></div>;
+    if (this.state.currentView == 'DayView') {
+      return <div><DayView state={this.state} /></div>;
     }
     if (this.state.currentView == 'AddFood') {
       return <div><AddFood state={this.state} /></div>;
@@ -94,6 +95,9 @@ class View extends React.Component {
     }
     if (this.state.currentView == 'WeekView') {
       return <div><WeekView state={this.state} /></div>;
+    }
+    if (this.state.currentView == 'EditClient') {
+      return <div><EditClient state={this.state} /></div>;
     }
     return <div><br/><br/>Select an option above</div>;
   }
@@ -119,17 +123,37 @@ export default class MainView extends React.Component {
     this.setState(props);
   }
 
+  // Actions
+
+  clientView() {
+    this.setState({currentView: 'SelectClient', nextAction: 'ClientView'});
+  }
+
+  editClient() {
+    this.setState({currentView: 'SelectClient', nextAction: 'EditClient'});
+  }
+
+  editFood() {
+    this.setState({currentView: 'SelectFood', nextAction: 'EditFood'});
+  }
+
   render() {
     return <div>
       {(this.state.currentView === 'WeekView' ? <div></div> : <div>
-
-      <h1>InFormed Nutrition</h1>
       <div className="nav-buttons">
-        <NavigationButton text="Select Client" link="SelectClient" setParentState={this.setParentState.bind(this)}/>
+        <button onClick={this.clientView.bind(this)}>Enter food plans for client</button>
+        <br/>
+        <br/>
         <NavigationButton text="Add Client" link="AddClient" setParentState={this.setParentState.bind(this)}/>
         <NavigationButton text="Add Food" link="AddFood" setParentState={this.setParentState.bind(this)}/>
         <NavigationButton text="Add Dish" link="AddDish" setParentState={this.setParentState.bind(this)}/>
         <NavigationButton text="Add Baking" link="AddBaking" setParentState={this.setParentState.bind(this)}/>
+        <br/>
+        <button onClick={this.editClient.bind(this)}>Edit Client</button>
+        <button onClick={this.editFood.bind(this)}>Edit Food</button>
+        <button onClick={this.editClient.bind(this)}>Edit Dish</button>
+        <button onClick={this.editClient.bind(this)}>Edit Baking</button>
+        <br/>
         <button onClick={addDemoData}>Add Demo Data</button>
         <hr/>
       </div>

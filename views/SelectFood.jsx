@@ -36,7 +36,7 @@ export default class SelectFood extends React.Component {
   // Add food
   addFood(id) {
     // TODO: If duplicate then return and alert user
-    const previousScreen = (dishId == null ? 'EditDay' : 'AddDish');
+    const previousScreen = (dishId == null ? 'DayView' : 'AddDish');
     console.log("Adding food, ID: " + id);
     if (dishId == null) {
       const mealsFood = database.getCollection('mealsFood').where((obj) => {

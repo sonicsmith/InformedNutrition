@@ -45,7 +45,7 @@ export default class SelectBaking extends React.Component {
       });
     }
     database.saveDatabase();
-    this.state.setParentState({currentView: 'EditDay'});
+    this.state.setParentState({currentView: 'DayView'});
   }
 
   handleQuantityChange(event) {

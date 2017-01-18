@@ -10,14 +10,15 @@ export default class SelectClient extends React.Component {
     this.state = {
       setParentState: props.state.setParentState,
       clientList: [{name:"loading"}],
-      database: props.state.database
+      database: props.state.database,
+      nextAction: props.state.nextAction
     };
     this.state.clientList = this.state.database.getCollection('clients').where((obj) => {return true;});
   }
 
   handleClick(id) {
     // Open edit client view
-    this.state.setParentState({currentView: 'EditClient', clientId: id});
+    this.state.setParentState({currentView: this.state.nextAction, clientId: id});
   }
 
   handleSearchChange(event) {
@@ -35,7 +36,9 @@ export default class SelectClient extends React.Component {
 
   render() {
     const list = this.state.clientList;
+    const heading = this.state.nextAction == 'EditClient' ? 'Select a client to edit:' : 'Select a client for food plan:';
     return <div>
+      <h3>{heading}</h3>
       <input type="text" placeholder="Search" onChange={this.handleSearchChange.bind(this)}/>
       <ul>
           {list.map((client) => {

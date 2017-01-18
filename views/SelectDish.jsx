@@ -49,7 +49,7 @@ export default class SelectDish extends React.Component {
     meal.recipe = dish.recipe;
     database.getCollection('daysMeals').update(meal);
     database.saveDatabase();
-    this.state.setParentState({currentView: 'EditDay'});
+    this.state.setParentState({currentView: 'DayView'});
   }
 
   handleSearchChange(event) {

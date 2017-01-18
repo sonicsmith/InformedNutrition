@@ -201,7 +201,7 @@ export class Meal extends React.Component {
 
 }
 
-export default class EditDay extends React.Component {
+export default class DayView extends React.Component {
 
   constructor(props) {
     super();
@@ -291,7 +291,7 @@ export default class EditDay extends React.Component {
   refreshDay() {
     this.state.setParentState({currentView: 'refresh'});
     setTimeout(()=> {
-      this.state.setParentState({currentView: 'EditDay', dayId: dayId});
+      this.state.setParentState({currentView: 'DayView', dayId: dayId});
     }, 1);
   }
 
