@@ -182,7 +182,7 @@ export default class ClientView extends React.Component {
       weeks.push(<li key={i}><Week weekNumber={i} setParentState={this.state.setParentState}/></li>);
     }
     return <div>
-      <h1>{this.state.client.name}</h1>
+      <h1>Food plan for: {this.state.client.name}</h1>
       <b>Intolerances:</b> {this.state.client.intolerances}<br/>
       <b>Likes:</b> {this.state.client.likes}<br/>
       <b>Dislikes:</b> {this.state.client.dislikes}<br/>

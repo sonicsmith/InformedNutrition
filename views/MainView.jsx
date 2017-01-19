@@ -7,6 +7,7 @@ import SelectClient from './SelectClient';
 import ClientView from './ClientView';
 import DayView from './DayView';
 import AddFood from './AddFood';
+import EditFood from './EditFood';
 import AddDish from './AddDish';
 import AddBaking from './AddBaking';
 import SelectFood from './SelectFood';
@@ -99,6 +100,9 @@ class View extends React.Component {
     if (this.state.currentView == 'EditClient') {
       return <div><EditClient state={this.state} /></div>;
     }
+    if (this.state.currentView == 'EditFood') {
+      return <div><EditFood state={this.state} /></div>;
+    }
     return <div><br/><br/>Select an option above</div>;
   }
 
@@ -137,11 +141,16 @@ export default class MainView extends React.Component {
     this.setState({currentView: 'SelectFood', nextAction: 'EditFood'});
   }
 
+  editBaking() {
+    this.setState({currentView: 'SelectBaking', nextAction: 'EditBaking'});
+  }
+
+
   render() {
     return <div>
       {(this.state.currentView === 'WeekView' ? <div></div> : <div>
       <div className="nav-buttons">
-        <button onClick={this.clientView.bind(this)}>Enter food plans for client</button>
+        <button onClick={this.clientView.bind(this)}>Food Plans</button>
         <br/>
         <br/>
         <NavigationButton text="Add Client" link="AddClient" setParentState={this.setParentState.bind(this)}/>
@@ -152,7 +161,7 @@ export default class MainView extends React.Component {
         <button onClick={this.editClient.bind(this)}>Edit Client</button>
         <button onClick={this.editFood.bind(this)}>Edit Food</button>
         <button onClick={this.editClient.bind(this)}>Edit Dish</button>
-        <button onClick={this.editClient.bind(this)}>Edit Baking</button>
+        <button onClick={this.editBaking.bind(this)}>Edit Baking</button>
         <br/>
         <button onClick={addDemoData}>Add Demo Data</button>
         <hr/>

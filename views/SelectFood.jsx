@@ -10,10 +10,10 @@ let database;
 
 
 
-const duplicateExists = (id, collection) => {
+// const duplicateExists = (id, collection) => {
 
-  return
-}
+//   return
+// }
 
 
 export default class SelectFood extends React.Component {
@@ -22,19 +22,24 @@ export default class SelectFood extends React.Component {
     super();
     this.state = {
       setParentState: props.state.setParentState,
+      nextAction: props.state.nextAction,
       foodList: [{name:"loading"}],
       quantity: 1
     };
     this.handleSearchChange = this.handleSearchChange.bind(this);
     mealId = props.state.mealId;
     dishId = props.state.dishId;
-    // mealNumber = props.state.mealNumber;
     database = props.state.database;
     this.state.foodList = database.getCollection('foodBank').where((obj) => { return true; });
   }
 
   // Add food
   addFood(id) {
+    // Hacky way of editing food after creation
+    if (this.state.nextAction == 'EditFood') {
+      this.state.setParentState({currentView: 'EditFood', foodId: id});
+      return;
+    }
     // TODO: If duplicate then return and alert user
     const previousScreen = (dishId == null ? 'DayView' : 'AddDish');
     console.log("Adding food, ID: " + id);
@@ -97,14 +102,25 @@ export default class SelectFood extends React.Component {
 
   render() {
     const list = this.state.foodList;
+    let title = '';
+    if (dishId == null) {
+      title = 'Select food and quantity for day:';
+    } else {
+      title = 'Select food and quantity for dish:';
+    }
+    if (this.state.nextAction == 'EditFood') {
+      title = 'Select a food to edit:'
+    }
     return <div>
+      <h1>{title}</h1>
       <input type="text" placeholder="Search" onChange={this.handleSearchChange}/>
       <ul>
           {list.map((food) => {
             const id = food.$loki;
             const quantityFoodName = food.name + 'quantity';
-            return <li key={id}>      
-              <input type="number" name={quantityFoodName} onChange={this.handleQuantityChange.bind(this)}/>
+            return <li key={id}>
+              {this.state.nextAction == 'EditFood' ? <div></div> : 
+              <input type="number" name={quantityFoodName} onChange={this.handleQuantityChange.bind(this)}/>}
               {food.name}
               <button onClick={this.addFood.bind(this, id)}>+</button>
             </li>;

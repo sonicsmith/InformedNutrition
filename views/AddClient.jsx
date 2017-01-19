@@ -46,19 +46,27 @@ export default class AddClient extends React.Component {
 
   render() {
     return <div>
-      <input type="text" name="name" placeholder="Name" onChange={this.handleEditChange.bind(this)}/>
+      <h3>Add New Client:</h3>
+      Name:<br/>
+      <input type="text" name="name" placeholder="Name" onChange={this.handleEditChange.bind(this)} />
       <br/>
-      <input type="text" name="cell" placeholder="Cell" onChange={this.handleEditChange.bind(this)}/>
+      Cell:<br/>
+      <input type="text" name="cell" placeholder="Cell" onChange={this.handleEditChange.bind(this)} />
       <br/>
-      <input type="text" name="email" placeholder="Email" onChange={this.handleEditChange.bind(this)}/>
+      Email:<br/>
+      <input type="text" name="email" placeholder="Email" onChange={this.handleEditChange.bind(this)} />
       <br/>
-      <input type="text" name="intolerances" placeholder="Intolerances" onChange={this.handleEditChange.bind(this)}/>
+      Intolerances:<br/>
+      <input type="text" name="intolerances" placeholder="Intolerances" onChange={this.handleEditChange.bind(this)} />
       <br/>
-      <input type="text" name="likes" placeholder="Likes" onChange={this.handleEditChange.bind(this)}/>
+      Likes:<br/>
+      <input type="text" name="likes" placeholder="Likes" onChange={this.handleEditChange.bind(this)} />
       <br/>
-      <input type="text" name="dislikes" placeholder="Dislikes" onChange={this.handleEditChange.bind(this)}/>
+      Dislikes:<br/>
+      <input type="text" name="dislikes" placeholder="Dislikes" onChange={this.handleEditChange.bind(this)} />
       <br/>
-      <input type="text" name="medications" placeholder="Medications and Supplements" onChange={this.handleEditChange.bind(this)}/>
+      Medications and Supplements:<br/>
+      <input type="text" name="medications" placeholder="Medications and Supplements" onChange={this.handleEditChange.bind(this)} />
       <br/>
       <button onClick={this.saveClient.bind(this)}>Save</button>
     </div>;
