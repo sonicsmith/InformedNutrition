@@ -14,6 +14,7 @@ export default class SelectBaking extends React.Component {
     super();
     this.state = {
       setParentState: props.state.setParentState,
+      nextAction: props.state.nextAction,
       quantity: 1
     };
     this.handleSearchChange = this.handleSearchChange.bind(this);
@@ -27,7 +28,11 @@ export default class SelectBaking extends React.Component {
 
   // Add Baking
   addBaking(id) {
-    console.log("Adding Baking, ID: " + id);
+    console.log("Click Baking, ID: " + id);
+    if (this.state.nextAction == 'EditBaking') {
+      this.state.setParentState({currentView: 'EditBaking', bakingId: id, nextAction: ''});
+      return;
+    }
     // Check for duplicate
     const mealsBaking = database.getCollection('mealsBaking').where((obj) => {
       const mealMatch = obj.mealId == mealId;
@@ -75,7 +80,10 @@ export default class SelectBaking extends React.Component {
           const id = baking.$loki;
           const quantityFoodName = baking.name + 'quantity';
           return <li key={id}>
-            <input type="number" name={quantityFoodName} onChange={this.handleQuantityChange.bind(this)}/>
+
+            {this.state.nextAction == '' ? <input type="number" name={quantityFoodName} onChange={this.handleQuantityChange.bind(this)}/>
+            : <div></div>}
+            
             {baking.unitName} <button onClick={this.addBaking.bind(this, id)}>+</button>
           </li>;
         })}

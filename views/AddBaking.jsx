@@ -48,19 +48,40 @@ export default class AddBaking extends React.Component {
 
   render() {
     return <div>
+      Name:
+      <br/>
       <input type="text" name="name" placeholder="Name" onChange={this.handleEditChange.bind(this)}/>
+      <br/>
+      <br/>
+      Unit Name phrase:
       <br/>
       <input type="text" name="unitName" placeholder="piece{s} of cake" onChange={this.handleEditChange.bind(this)}/>
       <br/>
+      <br/>
+      Recipe:
+      <br/>
       <textarea rows="5" type="text" name="recipe" placeholder="Recipe" onChange={this.handleEditChange.bind(this)}/>
+      <br/>
+      <br/>
+      Calorie:
       <br/>
       <input type="number" name="calorie" placeholder="Calorie content (g)" onChange={this.handleEditChange.bind(this)}/>
       <br/>
+      <br/>
+      Carb:
+      <br/>
       <input type="number" name="carb" placeholder="Carb content (g)" onChange={this.handleEditChange.bind(this)}/>
+      <br/>
+      <br/>
+      Protein:
       <br/>
       <input type="number" name="protein" placeholder="Protein content (g)" onChange={this.handleEditChange.bind(this)}/>
       <br/>
+      <br/>
+      Fat:
+      <br/>
       <input type="number" name="fat" placeholder="Fat content (g)" onChange={this.handleEditChange.bind(this)}/>
+      <br/>
       <br/>
       <button onClick={this.saveBaking.bind(this)}>Save</button>
     </div>;

@@ -18,7 +18,7 @@ export default class SelectClient extends React.Component {
 
   handleClick(id) {
     // Open edit client view
-    this.state.setParentState({currentView: this.state.nextAction, clientId: id});
+    this.state.setParentState({currentView: this.state.nextAction, clientId: id, nextAction: ''});
   }
 
   handleSearchChange(event) {

@@ -13,7 +13,8 @@ export default class SelectDish extends React.Component {
   constructor(props) {
     super();
     this.state = {
-      setParentState: props.state.setParentState
+      setParentState: props.state.setParentState,
+      nextAction: props.state.nextAction
     };
     this.handleSearchChange = this.handleSearchChange.bind(this);
     mealId = props.state.mealId;
@@ -23,7 +24,11 @@ export default class SelectDish extends React.Component {
   }
 
   // Add Dish
-  addDish(id) {    
+  addDish(id) {
+    if (this.state.nextAction == 'AddDish') {
+      this.state.setParentState({currentView: 'AddDish', dishId: id, nextAction: ''});
+      return;
+    }
     // Get all the food from dish
     let numFood = 0;
     const dishesFoods = database.getCollection('dishesFoods').where((obj) => {

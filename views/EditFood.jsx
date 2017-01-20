@@ -46,7 +46,7 @@ export default class AddFood extends React.Component {
     foodCollection.update(food);
     database.saveDatabase();
     console.log("Old Food Updated", this.state.name);
-    this.state.setParentState({currentView: 'SelectClient'});
+    this.state.setParentState({currentView: '', nextAction: ''});
     alert("Food Updated.");
   }
 

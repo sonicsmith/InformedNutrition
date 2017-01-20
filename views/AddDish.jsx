@@ -13,18 +13,17 @@ export default class AddDish extends React.Component {
     super();
     this.state = {
       setParentState: props.state.setParentState,
-      dishId: -1,
+      dishId: props.state.dishId,
       dishName: "",
       thisDishesFood: [],
       recipe: "",
       saved: false
     };
     database = props.state.database;
-    if (props.state.dishId >= 0) { // DANGEROUS?
+    if (this.state.dishId >= 0) { // DANGEROUS?
       // Reload last dish
       console.log("Reloading last dish.")
-      const currentDish = database.getCollection('dishBank').get(props.state.dishId);
-      this.state.dishId = currentDish.$loki;
+      const currentDish = database.getCollection('dishBank').get(this.state.dishId);
       this.state.dishName = currentDish.dishName;
       this.state.recipe = currentDish.recipe;
       this.state.thisDishesFood = database.getCollection('dishesFoods').where(
@@ -123,7 +122,7 @@ export default class AddDish extends React.Component {
           </div> 
             :  
           <div>
-            <b>{this.state.dishName}:</b>
+            <input type="text" name="dishName" placeholder="Dish Name" onChange={this.handleEditChange.bind(this)} value={this.state.dishName} />
             <br/>
             <b>Nutrition Totals: </b>
             <br/>
@@ -143,7 +142,7 @@ export default class AddDish extends React.Component {
             <button onClick={this.addFood.bind(this)}>Add Food</button>
             <br/>
             <br/>
-            <textarea rows="5" type="text" name="recipe" placeholder="Recipe" onChange={this.handleEditChange.bind(this)}/>
+            <textarea rows="5" type="text" name="recipe" placeholder="Recipe" onChange={this.handleEditChange.bind(this)} value={this.state.recipe} />
             <br/>
             <button onClick={this.saveRecipe.bind(this)}>Save Recipe</button>
           </div> )}

@@ -37,7 +37,7 @@ export default class SelectFood extends React.Component {
   addFood(id) {
     // Hacky way of editing food after creation
     if (this.state.nextAction == 'EditFood') {
-      this.state.setParentState({currentView: 'EditFood', foodId: id});
+      this.state.setParentState({currentView: 'EditFood', foodId: id, nextAction: ''});
       return;
     }
     // TODO: If duplicate then return and alert user

@@ -42,7 +42,7 @@ export default class EditClient extends React.Component {
     database.getCollection('clients').update(client);
     database.saveDatabase();
     console.log("Old Client Updated", this.state.name);
-    this.state.setParentState({currentView: 'SelectClient', nextView: 'ClientView'});
+    this.state.setParentState({currentView: '', nextView: ''});
     alert("Client Updated.");
   }
 
