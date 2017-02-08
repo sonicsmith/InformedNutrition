@@ -3,6 +3,8 @@
 
 import app from 'app';
 import BrowserWindow from 'browser-window';
+import {Menu} from 'electron';
+import {ipcMain} from 'electron';
 
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -18,6 +20,86 @@ const createWindow = () => {
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools()
+
+  const menuTemplate = [
+        {
+            label: 'Clients',
+            submenu: [
+              {
+                label: 'Food Plan',
+                click: () => {
+                    mainWindow.webContents.send('menuSelection' , {currentView: 'SelectClient', nextAction: 'ClientView'} );
+                }
+              },
+              {
+                label: 'Add',
+                click: () => {
+                    mainWindow.webContents.send('menuSelection' , {currentView: 'AddClient'} );
+                }
+              },
+              {
+                label: 'Edit',
+                click: () => {
+                    mainWindow.webContents.send('menuSelection' ,{currentView: 'SelectClient', nextAction: 'EditClient'} );
+                }
+              }
+            ]
+        },
+        {
+            label: 'Food',
+            submenu: [
+              {
+                label: 'Add',
+                click: () => {
+                    mainWindow.webContents.send('menuSelection' , {currentView: 'AddFood'} );
+                }
+              },
+              {
+                label: 'Edit',
+                click: () => {
+                    mainWindow.webContents.send('menuSelection' , {currentView: 'SelectFood', nextAction: 'EditFood'} );
+                }
+              }
+            ]
+        },
+        {
+            label: 'Dish',
+            submenu: [
+              {
+                label: 'Add',
+                click: () => {
+                    mainWindow.webContents.send('menuSelection' , {currentView: 'AddDish'} );
+                }
+              },
+              {
+                label: 'Edit',
+                click: () => {
+                    mainWindow.webContents.send('menuSelection' , {currentView: 'SelectDish', nextAction: 'AddDish'} );
+                }
+              }
+            ]
+        },
+        {
+            label: 'Baking',
+            submenu: [
+              {
+                label: 'Add',
+                click: () => {
+                    mainWindow.webContents.send('menuSelection' , {currentView: 'AddBaking'} );
+                }
+              },
+              {
+                label: 'Edit',
+                click: () => {
+                    mainWindow.webContents.send('menuSelection' , {currentView: 'SelectBaking', nextAction: 'EditBaking'} );
+                }
+              }
+            ]
+        },
+    ];
+
+  const menu = Menu.buildFromTemplate(menuTemplate);
+  Menu.setApplicationMenu(menu);
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {

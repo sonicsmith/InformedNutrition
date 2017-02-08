@@ -18,6 +18,8 @@ import SelectBaking from './SelectBaking';
 import WeekView from './WeekView';
 import NavigationButton from './NavigationButton';
 import Loki from 'lokijs';
+import {ipcRenderer} from 'electron';
+
 
 const debugMode = true;
 const demoData = require('../scripts/demoData');
@@ -59,10 +61,20 @@ class View extends React.Component {
     this.state = props.state;
     this.state.setParentState = props.setParentState;
     this.state.database = database;
+
+    // Menu Selection
+    ipcRenderer.on('menuSelection', (event, data) => {
+      this.menuSelectionChangeView(data);
+    });
   }
 
   componentWillReceiveProps(props) {
     this.setState(props.state);
+  }
+
+  menuSelectionChangeView(selection) {
+    console.log('Menu Change');
+    this.setState({currentView: selection.currentView, nextAction: selection.nextAction});
   }
 
   render() {
@@ -135,51 +147,32 @@ export default class MainView extends React.Component {
     this.setState(props);
   }
 
-  // Actions
+  // // Actions
 
-  clientView() {
-    this.setState({currentView: 'SelectClient', nextAction: 'ClientView'});
-  }
+  // clientView() {
+  //   this.setState({currentView: 'SelectClient', nextAction: 'ClientView'});
+  // }
 
-  editClient() {
-    this.setState({currentView: 'SelectClient', nextAction: 'EditClient'});
-  }
+  // editClient() {
+  //   this.setState({currentView: 'SelectClient', nextAction: 'EditClient'});
+  // }
 
-  editFood() {
-    this.setState({currentView: 'SelectFood', nextAction: 'EditFood'});
-  }
+  // editFood() {
+  //   this.setState({currentView: 'SelectFood', nextAction: 'EditFood'});
+  // }
 
-  editDish() {
-    this.setState({currentView: 'SelectDish', nextAction: 'AddDish'});
-  }
+  // editDish() {
+  //   this.setState({currentView: 'SelectDish', nextAction: 'AddDish'});
+  // }
 
-  editBaking() {
-    this.setState({currentView: 'SelectBaking', nextAction: 'EditBaking'});
-  }
+  // editBaking() {
+  //   this.setState({currentView: 'SelectBaking', nextAction: 'EditBaking'});
+  // }
 
 
   render() {
     return <div>
-      {(this.state.currentView === 'WeekView' ? <div></div> : <div>
-      <div className="nav-buttons">
-        <button onClick={this.clientView.bind(this)}>Food Plans</button>
-        <br/>
-        <br/>
-        <NavigationButton text="Add Client" link="AddClient" setParentState={this.setParentState.bind(this)}/>
-        <NavigationButton text="Add Food" link="AddFood" setParentState={this.setParentState.bind(this)}/>
-        <NavigationButton text="Add Dish" link="AddDish" setParentState={this.setParentState.bind(this)}/>
-        <NavigationButton text="Add Baking" link="AddBaking" setParentState={this.setParentState.bind(this)}/>
-        <br/>
-        <button onClick={this.editClient.bind(this)}>Edit Client</button>
-        <button onClick={this.editFood.bind(this)}>Edit Food</button>
-        <button onClick={this.editDish.bind(this)}>Edit Dish</button>
-        <button onClick={this.editBaking.bind(this)}>Edit Baking</button>
-        <br/>
-        <button onClick={addDemoData}>Add Demo Data</button>
-        <hr/>
-      </div>
-      
-      </div>)}
+      {(this.state.currentView === 'WeekView' ? <div></div> : <div></div>)}
       <div>
         <View state={this.state} setParentState={this.setParentState.bind(this)}/>
       </div>
