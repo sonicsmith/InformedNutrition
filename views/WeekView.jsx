@@ -2,6 +2,7 @@
 'use babel';
 
 import React from 'react';
+import {ipcRenderer} from 'electron';
 const fs = require('fs');
 
 let clientId;
@@ -172,24 +173,31 @@ export default class WeekView extends React.Component {
     if (day.intro) {
       this.state.intro = day.intro;
     }
-    alert('sdg');
+    ipcRenderer.on('publish', (event, data) => {
+        this.savePDF();
+    });
   }
 
-  createPDF() {
-    // const client = database.getCollection('clientsDays').get(clientId);
-    // console.log("createPDF clicked for: " + client.name);
-    // const remote = window.require('remote');
-    // const currentWindow = remote.getCurrentWindow();
-    // const contents = currentWindow.webContents;
-    // contents.printToPDF({pageSize: 'A4', landscape: false}, (error, data) => {
-    //   if (error) throw error
-    //   const fileName = client.name + '-' + weekNumber + '.pdf';
-    //   fs.writeFile(__dirname + '/' + fileName, data, (error) => {
-    //     if (error) throw error
-    //     console.log('Write PDF successfully.')
-    //     alert("File Saved: " + fileName);
-    //   })
-    // });
+  savePDF() {
+    const client = database.getCollection('clientsDays').get(clientId);
+    console.log("createPDF clicked for: " + client.name);
+    const remote = window.require('remote');
+    const currentWindow = remote.getCurrentWindow();
+    const contents = currentWindow.webContents;
+    contents.printToPDF({pageSize: 'A4', landscape: false}, (error, data) => {
+      if (error) {
+        alert('Tell Nic:' + error);
+      }
+      const weekNumber = this.state.startDay;
+      const fileName = client.name + '-' + weekNumber + '.pdf';
+      fs.writeFile(__dirname + '../../PDFs/' + fileName, data, (error) => {
+        if (error) {
+          alert('Tell Nic:' + error);
+        }
+        console.log('Write PDF successfully.')
+        alert("File Saved: " + fileName);
+      })
+    });
   }
 
   render() {

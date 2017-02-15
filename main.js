@@ -96,6 +96,17 @@ const createWindow = () => {
               }
             ]
         },
+        {
+            label: 'Publish',
+            submenu: [
+              {
+                label: 'Save PDF',
+                click: () => {
+                  mainWindow.webContents.send('publish');
+                }
+              }
+            ]
+        }
     ];
 
   const menu = Menu.buildFromTemplate(menuTemplate);
