@@ -38,7 +38,7 @@ export default class SelectClient extends React.Component {
     const list = this.state.clientList;
     const heading = this.state.nextAction == 'EditClient' ? 'Select a client to edit:' : 'Select a client for food plan:';
     return <div>
-      <h3>{heading}</h3>
+      <h1>{heading}</h1>
       <input type="text" placeholder="Search" onChange={this.handleSearchChange.bind(this)}/>
       <ul>
           {list.map((client) => {

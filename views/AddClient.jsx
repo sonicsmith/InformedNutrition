@@ -46,7 +46,7 @@ export default class AddClient extends React.Component {
 
   render() {
     return <div>
-      <h3>Add New Client:</h3>
+      <h1>Add New Client:</h1>
       Name:<br/>
       <input type="text" name="name" placeholder="Name" onChange={this.handleEditChange.bind(this)} />
       <br/>

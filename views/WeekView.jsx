@@ -118,7 +118,7 @@ export class DayView extends React.Component {
 
   render() {
     return <div style={style.main}>
-      <h3><u>{this.state.dayName}</u></h3>
+      <h1><u>{this.state.dayName}</u></h1>
       {this.state.thisDaysMeals.map((meal) => {
         return <MealView mealId={meal.$loki} key={meal.$loki}/>
       })}

@@ -338,7 +338,7 @@ export default class DayView extends React.Component {
       <button onClick={this.changeDay.bind(this, 5)}>F</button>
       <button onClick={this.changeDay.bind(this, 6)}>S</button>
       <button onClick={this.changeDay.bind(this, 7)}>S</button>
-      <h3>Week:{weekNumber}, Day:{dayNumber}</h3>
+      <h1>Week:{weekNumber}, Day:{dayNumber}</h1>
       <b>Nutrition Totals: </b>
       Calorie: {this.state.totalNutrients.calorie}, Carb: {this.state.totalNutrients.carb}, 
       Protein: {this.state.totalNutrients.protein}, Fat: {this.state.totalNutrients.fat}<br/>
