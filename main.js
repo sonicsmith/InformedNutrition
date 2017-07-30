@@ -9,7 +9,7 @@ import {ipcMain} from 'electron';
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let mainWindow
+let mainWindow;
 
 const createWindow = () => {
   // Create the browser window.
@@ -19,12 +19,18 @@ const createWindow = () => {
   mainWindow.loadURL('file://' + __dirname + '/index.html');
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools();
 
   const menuTemplate = [
         {
             label: 'App',
             submenu: [
+              {
+                label: 'Back',
+                click: () => {
+                    mainWindow.webContents.send('menuSelection' , {currentView: 'Back'} );
+                }
+              },
               {
                 label: 'Quit',
                 click: () => {

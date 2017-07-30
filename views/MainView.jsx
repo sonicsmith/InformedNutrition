@@ -25,6 +25,7 @@ const debugMode = true;
 const demoData = require('../scripts/demoData');
 
 let database = new Loki('app.db');
+let previousView = "";
 
 database.loadDatabase({}, () => {
   onDatabaseLoad();
@@ -74,7 +75,13 @@ class View extends React.Component {
 
   menuSelectionChangeView(selection) {
     console.log('Menu Change');
-    this.setState({currentView: selection.currentView, nextAction: selection.nextAction});
+    if (selection.currentView == 'Back') {
+      selection.currentView = previousView;
+    }
+    previousView = this.state.currentView;
+    if (selection.currentView) {
+      this.setState({currentView: selection.currentView, nextAction: selection.nextAction});
+    }
   }
 
   render() {
