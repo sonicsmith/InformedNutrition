@@ -186,7 +186,7 @@ export default class WeekView extends React.Component {
     const currentWindow = remote.getCurrentWindow();
     const contents = currentWindow.webContents;
 
-    const pdfDir = __dirname + '../../PDFs/';
+    const pdfDir = __dirname + '/../PDFs/';
 
     if (!fs.existsSync(pdfDir)){
         fs.mkdirSync(pdfDir);

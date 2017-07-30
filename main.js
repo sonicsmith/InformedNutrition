@@ -23,6 +23,17 @@ const createWindow = () => {
 
   const menuTemplate = [
         {
+            label: 'App',
+            submenu: [
+              {
+                label: 'Quit',
+                click: () => {
+                    app.quit();
+                }
+              }
+            ]
+        },
+        {
             label: 'Clients',
             submenu: [
               {
