@@ -179,7 +179,7 @@ export default class WeekView extends React.Component {
   }
 
   savePDF() {
-    const client = database.getCollection('clientsDays').get(clientId);
+    const client = database.getCollection('clients').get(clientId);
     console.log(client);
     console.log("createPDF clicked for: " + client.name);
     const remote = window.require('remote');
