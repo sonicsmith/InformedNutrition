@@ -58,6 +58,7 @@ export default class AddBaking extends React.Component {
 
   render() {
     return <div>
+      <h1>Edit Baking:</h1> 
       Name:
       <br/>
       <input type="text" name="name" placeholder="Name" onChange={this.handleEditChange.bind(this)} value={this.state.name}/>

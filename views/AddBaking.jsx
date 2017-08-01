@@ -46,8 +46,21 @@ export default class AddBaking extends React.Component {
     alert("Baking Saved.");
   }
 
+  // render() {
+  //     return <div>
+  //     <h1>Add New Baking:</h1>
+  //     Name:
+  //      <br/>
+  //      <input type="text" name="name" placeholder="Name" onChange={this.handleEditChange.bind(this)}/>
+  //      <br/>
+  //      <br/>
+  //      Unit Name phrase:
+  //      <br/>
+  //     </div>;
+  // }
   render() {
-    return <div>
+      return <div>
+      <h1>Add New Baking:</h1> 
       Name:
       <br/>
       <input type="text" name="name" placeholder="Name" onChange={this.handleEditChange.bind(this)}/>

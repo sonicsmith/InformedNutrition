@@ -211,12 +211,11 @@ export default class WeekView extends React.Component {
   render() {
     const client = database.getCollection('clients').get(clientId);
       return <div>
-        <img src="./INlogo.jpg" style={style.logo}/>
+
         <div style={style.title}><u>Meal Plan for {client.name}</u> {this.state.date}</div>
         <br/>
-        <div style={style.intro}>
-        {this.state.intro}
-        </div>
+        <div style={style.intro}>{this.state.intro}</div>
+
         <br/>
         <br/>
         <DayView dayId={this.state.startDay + 0} dayName="Monday"/>
@@ -234,6 +233,9 @@ export default class WeekView extends React.Component {
 }
 
 const style = {};
+style.head = {
+  backgroundColor: '#FFFFFF',
+}
 style.title = {
   color: 'grey',
   fontSize: 30

@@ -80,7 +80,7 @@ class View extends React.Component {
     }
     previousView = this.state.currentView;
     if (selection.currentView) {
-      this.setState({currentView: selection.currentView, nextAction: selection.nextAction});
+      this.setState({currentView: selection.currentView, nextAction: selection.nextAction, dishId: selection.dishId});
     }
   }
 

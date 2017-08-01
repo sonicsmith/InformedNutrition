@@ -68,7 +68,7 @@ const createWindow = () => {
               {
                 label: 'Add',
                 click: () => {
-                    mainWindow.webContents.send('menuSelection' , {currentView: 'AddFood'} );
+                    mainWindow.webContents.send('menuSelection' , {currentView: 'AddFood', dishId: -1} );
                 }
               },
               {

@@ -73,6 +73,7 @@ export default class SelectDish extends React.Component {
   render() {
     const list = this.state.dishList;
     return <div>
+      <h1>Select Dish:</h1>
       <input type="text" placeholder="Search" onChange={this.handleSearchChange.bind(this)}/>
       <ul>
           {list.map((dish) => {

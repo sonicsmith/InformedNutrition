@@ -74,6 +74,7 @@ export default class SelectBaking extends React.Component {
   render() {
     const list = this.state.bakingList;
     return <div>
+      <h1>Select Baking:</h1>
       <input type="text" placeholder="Search" onChange={this.handleSearchChange.bind(this)}/>
       <ul>
         {list.map((baking) => {

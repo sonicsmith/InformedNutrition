@@ -44,7 +44,7 @@ export default class AddFood extends React.Component {
 
   render() {
     return <div>
-      <h1>Add Food:</h1>
+      <h1>Add New Food:</h1>
       <input type="text" name="name" placeholder="Name and units" onChange={this.handleEditChange.bind(this)}/>
       <br/>
       <input type="number" name="calorie" placeholder="Calorie content (g)" onChange={this.handleEditChange.bind(this)}/>

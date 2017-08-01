@@ -37,6 +37,7 @@ export default class SelectClient extends React.Component {
   render() {
     const list = this.state.clientList;
     const heading = this.state.nextAction == 'EditClient' ? 'Select a client to edit:' : 'Select a client for food plan:';
+    const buttonAction = this.state.nextAction == 'EditClient' ? 'Edit' : 'Select';
     return <div>
       <h1>{heading}</h1>
       <input type="text" placeholder="Search" onChange={this.handleSearchChange.bind(this)}/>
@@ -44,7 +45,7 @@ export default class SelectClient extends React.Component {
           {list.map((client) => {
             const id = client.$loki;
             return <li key={id}>
-              {client.name} <button onClick={this.handleClick.bind(this, id)}>Edit</button>
+              {client.name} <button onClick={this.handleClick.bind(this, id)}>{buttonAction}</button>
             </li>;
           })}
       </ul>

@@ -20,7 +20,7 @@ export default class AddDish extends React.Component {
       saved: false
     };
     database = props.state.database;
-    if (this.state.dishId >= 0) { // DANGEROUS? Yes :(
+    if (this.state.dishId >= 0) { // DANGEROUS, setting to -1 when click AddDish
       // Reload last dish
       console.log("Reloading last dish.")
       const currentDish = database.getCollection('dishBank').get(this.state.dishId);
@@ -112,8 +112,9 @@ export default class AddDish extends React.Component {
 
   render() {
     let thisDishesFood = this.state.thisDishesFood;
+    const title = this.state.dishId >= 0 ? "Edit Dish:" : "Add New Dish:"
     return <div>
-      <h1>Add Dish:</h1>
+      <h1>{title}</h1>
       <div>
         {(!this.state.saved ? <div>
             <input type="text" name="dishName" placeholder="Dish Name" onChange={this.handleEditChange.bind(this)}/>
