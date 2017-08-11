@@ -4,7 +4,7 @@
   "main": "bootstrapper.js",
   "scripts": {
     "start": "electron .",
-    "package": "electron-packager . InFormedNutrition --platform=darwin"
+    "package": "electron-packager . InFormedNutrition --platform=darwin --arch=x64"
   },
   "repository": {
     "type": "git",

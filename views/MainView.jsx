@@ -77,11 +77,9 @@ class View extends React.Component {
   }
 
   menuSelectionChangeView(selection) {
-    console.log('Menu Change');
+    console.log('Menu Change: ' + selection.currentView);
     if (selection.currentView == 'Back') {
-      if (this.state.previousView) {
-        selection.currentView = this.state.previousView;
-      }
+      selection.currentView = this.state.previousView;
     }
     this.state.previousView = this.state.currentView;
     if (selection.currentView) {
