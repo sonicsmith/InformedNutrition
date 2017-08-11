@@ -174,7 +174,11 @@ export default class WeekView extends React.Component {
       this.state.intro = day.intro;
     }
     ipcRenderer.on('publish', (event, data) => {
-        this.savePDF();
+        if (currentView == 'WeekView') {
+          this.savePDF();
+        } else {
+          alert('Navigate to the food plan of a client and press create')
+        }
     });
   }
 
@@ -194,7 +198,7 @@ export default class WeekView extends React.Component {
 
     contents.printToPDF({pageSize: 'A4', landscape: false}, (error, data) => {
       if (error) {
-        alert('Tell Nic:' + error);
+        alert('Tell Nic: ' + error);
       }
       const weekNumber = this.state.startDay;
       const fileName = client.name + '-' + weekNumber + '.pdf';
