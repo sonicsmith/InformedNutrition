@@ -173,12 +173,9 @@ export default class WeekView extends React.Component {
     if (day.intro) {
       this.state.intro = day.intro;
     }
+    ipcRenderer.removeAllListeners('publish');
     ipcRenderer.on('publish', (event, data) => {
-        if (currentView == 'WeekView') {
-          this.savePDF();
-        } else {
-          alert('Navigate to the food plan of a client and press create')
-        }
+        this.savePDF();
     });
   }
 

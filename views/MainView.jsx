@@ -65,6 +65,10 @@ class View extends React.Component {
 
     // Menu Selection
     ipcRenderer.on('menuSelection', (event, data) => {
+      ipcRenderer.removeAllListeners('publish');
+      ipcRenderer.on('publish', (event, data) => {
+        alert('No PDF to publish. Please navigate to food plan view.');
+      });
       this.menuSelectionChangeView(data);
     });
   }
