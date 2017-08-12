@@ -19,12 +19,15 @@ import WeekView from './WeekView';
 import NavigationButton from './NavigationButton';
 import Loki from 'lokijs';
 import {ipcRenderer} from 'electron';
-
+const path = require('path');
 
 const debugMode = true;
 const demoData = require('../scripts/demoData');
 
-let database = new Loki('app.db');
+
+let dataBasePath = require('electron').remote.getGlobal('sharedObj').userData;
+
+let database = new Loki(path.join(dataBasePath, 'app.db'));
 
 database.loadDatabase({}, () => {
   onDatabaseLoad();

@@ -4,6 +4,8 @@
 import React from 'react';
 import {ipcRenderer} from 'electron';
 const fs = require('fs');
+const pdfPath = require('electron').remote.getGlobal('sharedObj').userData;
+const path = require('path');
 
 let clientId;
 let database;
@@ -186,8 +188,7 @@ export default class WeekView extends React.Component {
     const remote = window.require('remote');
     const currentWindow = remote.getCurrentWindow();
     const contents = currentWindow.webContents;
-
-    const pdfDir = __dirname + '/../PDFs/';
+    const pdfDir = path.join(pdfPath, 'PDFs');
 
     if (!fs.existsSync(pdfDir)){
         fs.mkdirSync(pdfDir);
@@ -199,7 +200,7 @@ export default class WeekView extends React.Component {
       }
       const weekNumber = this.state.startDay;
       const fileName = client.name + '-' + weekNumber + '.pdf';
-      fs.writeFile(pdfDir + fileName, data, (error) => {
+      fs.writeFile(path.join(pdfDir, fileName), data, (error) => {
         if (error) {
           alert('Tell Nic:' + error);
         }
